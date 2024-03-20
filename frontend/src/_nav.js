@@ -21,10 +21,7 @@ const _nav = [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+  
   },
   {
     component: CNavTitle,
@@ -32,8 +29,14 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Colors',
+    name: 'Accounts',
     to: '/theme/colors',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Accounts lists',
+    to: '/theme/AccountLists',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {

@@ -7,7 +7,7 @@ const { body } = require('express-validator');
 router.post('/create-accounts', createAccount);
 
 // GET request to retrieve all accounts
-router.get('/accounts', getAccounts);
+router.get('/get-accounts', getAccounts);
 
 // GET request to retrieve a specific account by ID
 router.get('/accounts/:id', getAccountById);
