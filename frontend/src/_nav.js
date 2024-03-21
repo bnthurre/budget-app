@@ -25,18 +25,18 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Theme',
+    name: 'Accounts',
   },
   {
     component: CNavItem,
     name: 'Accounts',
-    to: '/theme/colors',
+    to: '/accounts/accountForm',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Accounts lists',
-    to: '/theme/AccountLists',
+    to: '/accounts/AccountLists',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
