@@ -38,7 +38,7 @@ const Account = () => {
         account_type: '',
         description: '',
       });
-      setError(''); // Clear any previous error message
+      setError('');
     } catch (error) {
       console.error('Error creating account:', error);
       if (error.response && error.response.status === 409) {
