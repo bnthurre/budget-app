@@ -7,6 +7,7 @@ import {
   cilCursor,
   cilDescription,
   cilDrop,
+  cilBank,
   cilNotes,
   cilPencil,
   cilPuzzle,
@@ -29,9 +30,9 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Accounts',
+    name: 'Create Account',
     to: '/accounts/accountForm',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilBank} customClassName="nav-icon" />, 
   },
   {
     component: CNavItem,
@@ -42,7 +43,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Typography',
-    to: '/theme/typography',
+    to: '/accounts/typography',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {

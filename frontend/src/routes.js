@@ -54,7 +54,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/accounts', name: 'Account', element: AccountForm, exact: true },
+  { path: '/accounts', name: 'Accounts', element: AccountLists, exact: true },
   { path: '/accounts/accountForm', name: 'AccountForm', element: AccountForm},
   { path: '/accounts/AccountLists', name: 'AccountLists', element: AccountLists},
   { path: '/accounts/typography', name: 'Typography', element: Typography },
