@@ -78,16 +78,36 @@ const Tables = () => {
         </div>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Account</strong> <small>Lists</small>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <div>
+                <strong>Account</strong> <small>Lists</small>
+              </div>
+              {selectedRows.length > 0 && (
+                <div className="mb-2">
+                  {selectedRows.length === accounts.length ? (
+                    <div>All accounts are selected</div>
+                  ) : (
+                    <div>{selectedRows.length} accounts selected</div>
+                  )}
+                </div>
+              )}
+            </div>
           </CCardHeader>
+
           <CCardBody>
             <CTable striped>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell><div>
+                  <CTableHeaderCell>
                     <input type="checkbox" checked={selectAllChecked} onChange={toggleSelectAll} />
-                  </div></CTableHeaderCell>
-
+                  </CTableHeaderCell>
                   <CTableHeaderCell scope="col">Account Number</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Account Name</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Account Type</CTableHeaderCell>
