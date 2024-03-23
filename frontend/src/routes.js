@@ -3,6 +3,8 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const AccountForm = React.lazy(() => import('./views/accounts/accountform/accountform'))
 const AccountLists = React.lazy(() => import('./views/accounts/AccountLists/AccountLists'))
+const CategoryForm = React.lazy(() => import('./views/accounts/categoryForm/categoryForm'))
+const CategoryList = React.lazy(() => import('./views/accounts/categoryList/categoryList'))
 
 
 // Base
@@ -57,6 +59,8 @@ const routes = [
   { path: '/accounts', name: 'Accounts', element: AccountLists, exact: true },
   { path: '/accounts/accountForm', name: 'AccountForm', element: AccountForm},
   { path: '/accounts/AccountLists', name: 'AccountLists', element: AccountLists},
+  { path: '/accounts/categoryForm', name: 'Create Category', element: CategoryForm },
+  { path: '/accounts/categoryList', name: 'Category Lists', element: CategoryList},
   { path: '/base', name: 'Base', element: Cards, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },
   { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
