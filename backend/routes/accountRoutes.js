@@ -10,7 +10,7 @@ router.post('/create-accounts', createAccount);
 router.get('/get-accounts', getAccounts);
 
 // GET request to retrieve a specific account by ID
-router.get('/accounts/:id', getAccountById);
+router.get('/get-account/:id', getAccountById);
 
 // PUT request to update an account by ID
 router.put('/accounts/:id', [
@@ -18,6 +18,6 @@ router.put('/accounts/:id', [
 ], updateAccount);
 
 // DELETE request to delete an account by ID
-router.delete('/accounts/:id', deleteAccount);
+router.delete('/delete-account/:id', deleteAccount);
 
 module.exports = router;
