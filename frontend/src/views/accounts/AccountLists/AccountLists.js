@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
@@ -18,7 +16,6 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilDelete } from '@coreui/icons'
-
 
 const Tables = () => {
   const [accounts, setAccounts] = useState([])
@@ -60,17 +57,17 @@ const Tables = () => {
   }
   const handleDelete = async (accountId) => {
     try {
-      await axios.delete(`http://localhost:7001/delete-account/${accountId}`);
-      setAccounts(accounts.filter(account => account._id !== accountId));
+      await axios.delete(`http://localhost:7001/delete-account/${accountId}`)
+      setAccounts(accounts.filter((account) => account._id !== accountId))
     } catch (error) {
-      console.error('Error deleting account:', error);
+      console.error('Error deleting account:', error)
     }
-  };
+  }
   return (
     <CRow>
       <CCol xs={12}>
         <div className="d-flex justify-content-end mb-3">
-          <Link to="/accounts/accounts/accountform/accountform.js">
+          <Link to="/accounts/accountform">
             <CButton color="success" size="sm">
               Create Account
             </CButton>
@@ -130,8 +127,8 @@ const Tables = () => {
                     <CTableHeaderCell>{account.account_type}</CTableHeaderCell>
                     <CTableHeaderCell>{account.description}</CTableHeaderCell>
                     <CTableHeaderCell>
-                      <CButton color="danger" size="sm" >
-                        <CIcon icon={cilDelete}   onClick={() => handleDelete(account._id)}/>
+                      <CButton color="danger" size="sm">
+                        <CIcon icon={cilDelete} onClick={() => handleDelete(account._id)} />
                       </CButton>
                     </CTableHeaderCell>
                   </CTableRow>
@@ -146,4 +143,3 @@ const Tables = () => {
 }
 
 export default Tables
-
