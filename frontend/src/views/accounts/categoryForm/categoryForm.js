@@ -21,6 +21,7 @@ const Category = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -33,13 +34,17 @@ const Category = () => {
       // Reset form fields after successful submission
       setFormData({
         name: '',
-        description: '',
-        
+        description: '',    
       });
       setError('');
       navigate('/accounts/categoryList')
     } catch (error) {
       console.error('Error creating category:', error);
+      if (error.response && error.response.status === 409) {
+        setError('Error creating category. Please try again later.');
+      } else {
+        setError('Category already exists');
+      }
     }
   };
 
@@ -86,4 +91,3 @@ const Category = () => {
 };
 
 export default Category;
-
