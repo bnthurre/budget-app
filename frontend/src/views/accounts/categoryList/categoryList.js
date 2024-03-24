@@ -14,6 +14,8 @@ import {
   CTableHead,
   CTableRow,
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilDelete } from '@coreui/icons'
 
 const Tables = () => {
   const [categories, setcategories] = useState([])
@@ -53,7 +55,14 @@ const Tables = () => {
   const toggleSelectAll = () => {
     setSelectAllChecked(!selectAllChecked)
   }
-
+  const handleDelete = async (categoryId) => {
+    try {
+      await axios.delete(`http://localhost:7001/delete-category/${categoryId}`)
+      setcategories(categories.filter((category) => category._id !== categoryId))
+    } catch (error) {
+      console.error('Error deleting category:', error)
+    }
+  }
   return (
     <CRow>
       <CCol xs={12}>
@@ -113,6 +122,11 @@ const Tables = () => {
                     </CTableHeaderCell>
                     <CTableHeaderCell>{category.name}</CTableHeaderCell>
                     <CTableHeaderCell>{category.description}</CTableHeaderCell>
+                    <CTableHeaderCell>
+                      <CButton color="danger" size="sm">
+                        <CIcon icon={cilDelete} onClick={() => handleDelete(category._id)} />
+                      </CButton>
+                    </CTableHeaderCell>
                   </CTableRow>
                 ))}
               </CTableBody>
