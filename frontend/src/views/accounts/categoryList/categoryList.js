@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -13,30 +13,52 @@ import {
   CTableHeaderCell,
   CTableHead,
   CTableRow,
-} from '@coreui/react';
+} from '@coreui/react'
 
 const Tables = () => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setcategories] = useState([])
+  const [selectedRows, setSelectedRows] = useState([])
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
 
   useEffect(() => {
     const fetchcategories = async () => {
       try {
-        const response = await axios.get('http://localhost:7001/get-categories');
-        setCategories(response.data);
+        const response = await axios.get('http://localhost:7001/get-categories')
+        setcategories(response.data)
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error)
       }
-    };
+    }
 
-    fetchcategories();
-  }, []);
+    fetchcategories()
+  }, [])
+
+  useEffect(() => {
+    if (selectAllChecked) {
+      setSelectedRows(categories.map((category) => category._id))
+    } else {
+      setSelectedRows([])
+    }
+  }, [selectAllChecked, categories])
+
+  const toggleRowSelection = (categoryId) => {
+    const selectedIndex = selectedRows.indexOf(categoryId)
+    if (selectedIndex === -1) {
+      setSelectedRows([...selectedRows, categoryId])
+    } else {
+      setSelectedRows(selectedRows.filter((id) => id !== categoryId))
+    }
+  }
+
+  const toggleSelectAll = () => {
+    setSelectAllChecked(!selectAllChecked)
+  }
 
   return (
     <CRow>
       <CCol xs={12}>
-      <div className="d-flex justify-content-end mb-3">
-          {/* Link to the category form */}
-          <Link to="/accounts/categoryForm">
+        <div className="d-flex justify-content-end mb-3">
+          <Link to="/accounts/categoryform">
             <CButton color="success" size="sm">
               Create Category
             </CButton>
@@ -44,20 +66,52 @@ const Tables = () => {
         </div>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Category</strong> <small>Lists</small>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <div>
+                <strong>Category</strong> <small>Lists</small>
+              </div>
+              {selectedRows.length > 0 && (
+                <div className="mb-2">
+                  {selectedRows.length === categories.length ? (
+                    <div>All categories are selected</div>
+                  ) : (
+                    <div>{selectedRows.length}selected</div>
+                  )}
+                </div>
+              )}
+            </div>
           </CCardHeader>
+
           <CCardBody>
             <CTable striped>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Description</CTableHeaderCell>
+                  <CTableHeaderCell>
+                    <input type="checkbox" checked={selectAllChecked} onChange={toggleSelectAll} />
+                  </CTableHeaderCell>
+                  <CTableHeaderCell>Name</CTableHeaderCell>
+                  <CTableHeaderCell>Description</CTableHeaderCell>
+                  <CTableHeaderCell></CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {categories.map((category) => (
                   <CTableRow key={category._id}>
-                    <CTableHeaderCell scope="row">{category.name}</CTableHeaderCell>
+                    <CTableHeaderCell>
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(category._id)}
+                        onChange={() => toggleRowSelection(category._id)}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell>{category.name}</CTableHeaderCell>
                     <CTableHeaderCell>{category.description}</CTableHeaderCell>
                   </CTableRow>
                 ))}
@@ -67,12 +121,8 @@ const Tables = () => {
         </CCard>
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Tables;
-
-
-
-
+export default Tables
 
