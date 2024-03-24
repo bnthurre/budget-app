@@ -35,8 +35,8 @@ const Tables = () => {
     <CRow>
       <CCol xs={12}>
       <div className="d-flex justify-content-end mb-3">
-          {/* Link to the account form */}
-          <Link to="/accounts/accounts/accountform/accountform.js">
+          {/* Link to the category form */}
+          <Link to="/accounts/categoryForm">
             <CButton color="success" size="sm">
               Create Category
             </CButton>
