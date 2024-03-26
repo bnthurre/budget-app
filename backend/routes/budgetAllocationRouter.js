@@ -9,12 +9,12 @@ router.post('/create-budget-allocation', budgetAllocationController.createBudget
 router.get('/get-budget-allocation', budgetAllocationController.getAllBudgetAllocations)
 
 //get by id
-router.get('/get-budgetallocationById', budgetAllocationController.getBudgetAllocationById);
+router.get('/get-budgetallocationById/:id', budgetAllocationController.getBudgetAllocationById);
 
 //update
-router.put('/update-budget-allocation', budgetAllocationController.updateBudgetAllocation)
+router.put('/update-budget-allocation/:id', budgetAllocationController.updateBudgetAllocation)
 
 //delete by id
-router.delete('/delete-budget-allocation', budgetAllocationController.deleteBudgetAllocation)
+router.delete('/delete-budget-allocation/:id', budgetAllocationController.deleteBudgetAllocation)
 
 module.exports = router;

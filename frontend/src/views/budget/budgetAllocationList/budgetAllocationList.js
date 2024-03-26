@@ -18,30 +18,30 @@ import CIcon from '@coreui/icons-react'
 import { cilDelete } from '@coreui/icons'
 
 const Tables = () => {
-  const [accounts, setAccounts] = useState([])
+  const [allocations, setallocation] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false)
 
   useEffect(() => {
-    const fetchAccounts = async () => {
+    const fetchallocation = async () => {
       try {
-        const response = await axios.get('http://localhost:7001/get-accounts')
-        setAccounts(response.data)
+        const response = await axios.get('http://localhost:7001/get-budget-allocation')
+        setallocation(response.data)
       } catch (error) {
-        console.error('Error fetching accounts:', error)
+        console.error('Error fetching allocations:', error)
       }
     }
 
-    fetchAccounts()
+    fetchallocation()
   }, [])
 
   useEffect(() => {
     if (selectAllChecked) {
-      setSelectedRows(accounts.map((account) => account._id))
+      setSelectedRows(allocations.map((account) => account._id))
     } else {
       setSelectedRows([])
     }
-  }, [selectAllChecked, accounts])
+  }, [selectAllChecked, allocations])
 
   const toggleRowSelection = (accountId) => {
     const selectedIndex = selectedRows.indexOf(accountId)
@@ -55,21 +55,21 @@ const Tables = () => {
   const toggleSelectAll = () => {
     setSelectAllChecked(!selectAllChecked)
   }
-  const handleDelete = async (accountId) => {
+  const handleDelete = async (allocationId) => {
     try {
-      await axios.delete(`http://localhost:7001/delete-account/${accountId}`)
-      setAccounts(accounts.filter((account) => account._id !== accountId))
+      await axios.delete(`http://localhost:7001/delete-budget-allocation/${allocationId}`)
+      setallocation(allocations.filter((allocations) => allocations._id !== allocationId))
     } catch (error) {
-      console.error('Error deleting account:', error)
+      console.error('Error deleting allocations:', error)
     }
   }
   return (
     <CRow>
       <CCol xs={12}>
         <div className="d-flex justify-content-end mb-3">
-          <Link to="/accounts/accountform">
+          <Link to="/budget/budgetAllocationForm">
             <CButton color="success" size="sm">
-              Create Account
+              Create allocations
             </CButton>
           </Link>
         </div>
@@ -84,12 +84,12 @@ const Tables = () => {
               }}
             >
               <div>
-                <strong>Account</strong> <small>Lists</small>
+                <strong>allocation</strong> <small>Lists</small>
               </div>
               {selectedRows.length > 0 && (
                 <div className="mb-2">
-                  {selectedRows.length === accounts.length ? (
-                    <div>All accounts are selected</div>
+                  {selectedRows.length === allocations.length ? (
+                    <div>All allocations are selected</div>
                   ) : (
                     <div>{selectedRows.length}selected</div>
                   )}
@@ -104,28 +104,32 @@ const Tables = () => {
                 <CTableRow>
                   <CTableHeaderCell>
                     <input type="checkbox" checked={selectAllChecked} onChange={toggleSelectAll} />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Account Number</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Account Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Account Type</CTableHeaderCell>
+                    </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">account Number</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Budget Amount</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Year</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Budget Date</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Description</CTableHeaderCell>
                   <CTableHeaderCell></CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {accounts.map((account) => (
-                  <CTableRow key={account._id}>
+                {allocations.map((allocations) => (
+                  <CTableRow key={allocations._id}>
                     <CTableHeaderCell>
                       <input
                         type="checkbox"
-                        checked={selectedRows.includes(account._id)}
-                        onChange={() => toggleRowSelection(account._id)}
+                        checked={selectedRows.includes(allocations._id)}
+                        onChange={() => toggleRowSelection(allocations._id)}
                       />
                     </CTableHeaderCell>
-                    <CTableHeaderCell scope="row">{account.account_number}</CTableHeaderCell>
-                    <CTableHeaderCell>{account.account_name}</CTableHeaderCell>
-                    <CTableHeaderCell>{account.account_type}</CTableHeaderCell>
-                    <CTableHeaderCell>{account.description}</CTableHeaderCell>
+                    <CTableHeaderCell scope="row">{allocations.category}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocations.account_id}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocations.budget_amount}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocations.year}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocations.budget_date}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocations.description}</CTableHeaderCell>
                     <CTableHeaderCell>
                       <CButton color="danger" size="sm">
                         <CIcon icon={cilDelete} onClick={() => handleDelete(account._id)} />
