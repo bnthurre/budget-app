@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import axios from 'axios';
+import axios from 'axios'
 import {
   CButton,
   CCard,
@@ -12,49 +12,55 @@ import {
   CFormInput,
   CInputGroup,
   CRow,
-} from '@coreui/react';
+} from '@coreui/react'
+// const budgetAllocationSchema = new mongoose.Schema({
+//   category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+//   account_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
+//   budget_amount: { type: Number, required: true },
+//   year: { type: Number, required: true },
+//   budget_date: { type: Date, default: Date.now }, // Consider user input or automatic setting in frontend
+//   description: { type: String },
+// });
 
-const Account = () => {
+const BudgetAllocation = () => {
   const [formData, setFormData] = useState({
-    account_name: '',
-    account_number: '',
-    account_type: '',
+    category_id: '',
+    account_id: '',
+    budget_amount: '',
+    year: '',
+    budget_date: '',
     description: '',
-  });
+  })
 
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const response = await axios.post('http://localhost:7001/create-accounts', formData);
-      console.log('Account created:', response.data);
+      const response = await axios.post('http://localhost:7001/create-budget-allocation', formData)
+      console.log('BudgetAllocation created:', response.data)
       // Reset form fields after successful submission
       setFormData({
-        account_name: '',
-        account_number: '',
-        account_type: '',
+        category_id: '',
+        account_id: '',
+        budget_amount: '',
+        year: '',
+        budget_date: '',
         description: '',
-      });
-      setError('');
+      })
+      setError('')
       if (!error) {
-        navigate('/accounts/AccountLists'); 
+        navigate('/budget/BudgetAllocationList')
       }
-
     } catch (error) {
-      console.error('Error creating account:', error);
-      if (error.response && error.response.status === 409) {
-        setError('Account number already exists. Please choose a different account number.');
-      } else {
-        setError('Account number already exists. Please choose a different account number');
-      }
+      console.error('Error creating BudgetAllocation:', error)
     }
-  };
+  }
 
   return (
     <CContainer>
@@ -63,35 +69,55 @@ const Account = () => {
           <CCard className="mx-4">
             <CCardBody className="p-4">
               <CForm onSubmit={handleSubmit}>
-                <h1>Create Account</h1>
-                <p className="text-body-secondary">Create your account</p>
+                <h1>Create BudgetAllocation</h1>
+                <p className="text-body-secondary">Create your BudgetAllocation</p>
                 {error && <div className="text-danger mb-3">{error}</div>}
                 <CInputGroup className="mb-3">
                   <CFormInput
-                    name="account_name"
-                    value={formData.account_name}
+                    name="category_id"
+                    value={formData.category_id}
                     onChange={handleChange}
-                    placeholder="Account Name"
-                    autoComplete="Account Name"
+                    placeholder="Category_id"
+                    autoComplete="category_id"
                   />
                 </CInputGroup>
                 <CInputGroup className="mb-3">
                   <CFormInput
-                    name="account_number"
-                    value={formData.account_number}
+                    name=" account_id"
+                    value={formData.account_id}
                     onChange={handleChange}
-                    placeholder="Account Number"
-                    autoComplete="Account Number"
+                    placeholder=" Account_id"
+                    autoComplete=" account_id"
                   />
                 </CInputGroup>
                 <CInputGroup className="mb-3">
                   <CFormInput
-                    name="account_type"
-                    value={formData.account_type}
+                    name="budget_amount"
+                    value={formData.budget_amount}
                     onChange={handleChange}
                     type="text"
-                    placeholder="Account Type"
-                    autoComplete="Account Type"
+                    placeholder="Budget amount"
+                    autoComplete="budget_amount"
+                  />
+                </CInputGroup>
+                <CInputGroup className="mb-4">
+                  <CFormInput
+                    name="year"
+                    value={formData.year}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Year"
+                    autoComplete="year"
+                  />
+                </CInputGroup>
+                <CInputGroup className="mb-4">
+                  <CFormInput
+                    name="budget_date"
+                    value={formData.budget_date}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Budget date"
+                    autoComplete="budget_date"
                   />
                 </CInputGroup>
                 <CInputGroup className="mb-4">
@@ -100,13 +126,13 @@ const Account = () => {
                     value={formData.description}
                     onChange={handleChange}
                     type="text"
-                    placeholder="Description"
-                    autoComplete="Description"
+                    placeholder="description"
+                    autoComplete="description"
                   />
                 </CInputGroup>
                 <div className="d-grid">
                   <CButton type="submit" color="success">
-                    Create Account
+                    Create BudgetAllocation
                   </CButton>
                 </div>
               </CForm>
@@ -115,7 +141,7 @@ const Account = () => {
         </CCol>
       </CRow>
     </CContainer>
-  );
-};
+  )
+}
 
-export default Account;
+export default BudgetAllocation
