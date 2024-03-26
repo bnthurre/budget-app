@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css'; // Import DatePicker styles
 import {
   CButton,
   CCard,
@@ -50,7 +52,9 @@ const BudgetAllocation = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
-
+  const handleDateChange = (date) => {
+    setFormData({ ...formData, budget_date: date })
+  }
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -72,6 +76,8 @@ const BudgetAllocation = () => {
       setError('Error creating BudgetAllocation')
     }
   }
+  // Generate an array of years starting from the current year and going back 10 years
+  const years = Array.from({ length: 10 }, (_, index) => new Date().getFullYear() - index)
 
   return (
     <CContainer>
@@ -118,29 +124,32 @@ const BudgetAllocation = () => {
                     name="budget_amount"
                     value={formData.budget_amount}
                     onChange={handleChange}
-                    type="text"
+                    type="Number"
                     placeholder="Budget amount"
                     autoComplete="budget_amount"
                   />
                 </CInputGroup>
-                <CInputGroup className="mb-4">
-                  <CFormInput
+                <CInputGroup className="mb-3">
+                  <CFormSelect
                     name="year"
                     value={formData.year}
                     onChange={handleChange}
-                    type="text"
-                    placeholder="Year"
-                    autoComplete="year"
-                  />
+                    aria-label="Year"
+                  >
+                    <option value="">Select Year</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </CFormSelect>
                 </CInputGroup>
                 <CInputGroup className="mb-4">
-                  <CFormInput
+                  <DatePicker
                     name="budget_date"
-                    value={formData.budget_date}
-                    onChange={handleChange}
-                    type="text"
-                    placeholder="Budget date"
-                    autoComplete="budget_date"
+                    selected={formData.budget_date}
+                    onChange={handleDateChange}
+                    placeholderText="Budget date"
                   />
                 </CInputGroup>
                 <CInputGroup className="mb-4">
