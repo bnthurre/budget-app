@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {
@@ -9,14 +9,14 @@ import {
   CContainer,
   CForm,
   CFormInput,
-  CFormSelect, // Import CFormSelect for select input
+  CFormSelect,
   CInputGroup,
   CRow,
 } from '@coreui/react'
 
 const BudgetAllocation = () => {
   const [formData, setFormData] = useState({
-    category_id: '',
+    category: '',
     account_id: '',
     budget_amount: '',
     year: '',
@@ -25,7 +25,27 @@ const BudgetAllocation = () => {
   })
 
   const [error, setError] = useState('')
+  const [categories, setCategories] = useState([])
+  const [accounts, setAccounts] = useState([])
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchCategoriesAndAccounts = async () => {
+      try {
+        // Fetch categories
+        const categoriesResponse = await axios.get('http://localhost:7001/get-categories')
+        setCategories(categoriesResponse.data)
+
+        // Fetch accounts
+        const accountsResponse = await axios.get('http://localhost:7001/get-accounts')
+        setAccounts(accountsResponse.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchCategoriesAndAccounts()
+  }, [])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -38,7 +58,7 @@ const BudgetAllocation = () => {
       console.log('BudgetAllocation created:', response.data)
       // Reset form fields after successful submission
       setFormData({
-        category_id: '',
+        category: '',
         account_id: '',
         budget_amount: '',
         year: '',
@@ -46,11 +66,10 @@ const BudgetAllocation = () => {
         description: '',
       })
       setError('')
-      if (!error) {
-        navigate('/budget/BudgetAllocationList')
-      }
+      navigate('/budget/BudgetAllocationList')
     } catch (error) {
       console.error('Error creating BudgetAllocation:', error)
+      setError('Error creating BudgetAllocation')
     }
   }
 
@@ -61,20 +80,22 @@ const BudgetAllocation = () => {
           <CCard className="mx-4">
             <CCardBody className="p-4">
               <CForm onSubmit={handleSubmit}>
-                <h1>Create BudgetAllocation</h1>
-                <p className="text-body-secondary">Create your BudgetAllocation</p>
+                <h1>Create Budget Allocation</h1>
+                <p className="text-body-secondary">Create your Budget Allocation</p>
                 {error && <div className="text-danger mb-3">{error}</div>}
                 <CInputGroup className="mb-3">
                   <CFormSelect
-                    name="category_id"
-                    value={formData.category_id}
+                    name="category"
+                    value={formData.category}
                     onChange={handleChange}
-                    aria-label="Category_id"
+                    aria-label="category"
                   >
                     <option value="">Select Category</option>
-                    <option value="1">Category 1</option>
-                    <option value="2">Category 2</option>
-                    <option value="3">Category 3</option>
+                    {categories.map((category) => (
+                      <option key={category._id} value={category._id}>
+                        {category.name}
+                      </option>
+                    ))}
                   </CFormSelect>
                 </CInputGroup>
                 <CInputGroup className="mb-3">
@@ -84,10 +105,12 @@ const BudgetAllocation = () => {
                     onChange={handleChange}
                     aria-label="Account_id"
                   >
-                    <option value="">Select Account</option>
-                    <option value="1">Account 1</option>
-                    <option value="2">Account 2</option>
-                    <option value="3">Account 3</option>
+                    <option value="">Select Account Number</option>
+                    {accounts.map((account) => (
+                      <option key={account._id} value={account._id}>
+                        {account.account_name} - {account.account_number}
+                      </option>
+                    ))}
                   </CFormSelect>
                 </CInputGroup>
                 <CInputGroup className="mb-3">
