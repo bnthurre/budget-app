@@ -55,6 +55,36 @@ const _nav = [
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
 
   },
+  {
+    component: CNavTitle,
+    name: 'Budget',
+  },
+  {
+    component: CNavItem,
+    name: 'Budget Allocation',
+    to: '/budget/budgetAllocationForm',
+    icon: <CIcon icon={cilBank} customClassName="nav-icon" />, 
+  },
+  {
+    component: CNavItem,
+    name: 'Budget allocation lists',
+    to: '/budget/budgetAllocationLists',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Budget Payment',
+    to: '/budget/',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+
+  },
+  {
+    component: CNavItem,
+    name: 'category List',
+    to: '/accounts/categoryList',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+
+  },
  
   {
     component: CNavTitle,
