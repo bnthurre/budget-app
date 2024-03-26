@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
 import axios from 'axios'
 import {
   CButton,
@@ -10,17 +9,10 @@ import {
   CContainer,
   CForm,
   CFormInput,
+  CFormSelect, // Import CFormSelect for select input
   CInputGroup,
   CRow,
 } from '@coreui/react'
-// const budgetAllocationSchema = new mongoose.Schema({
-//   category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
-//   account_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
-//   budget_amount: { type: Number, required: true },
-//   year: { type: Number, required: true },
-//   budget_date: { type: Date, default: Date.now }, // Consider user input or automatic setting in frontend
-//   description: { type: String },
-// });
 
 const BudgetAllocation = () => {
   const [formData, setFormData] = useState({
@@ -73,22 +65,30 @@ const BudgetAllocation = () => {
                 <p className="text-body-secondary">Create your BudgetAllocation</p>
                 {error && <div className="text-danger mb-3">{error}</div>}
                 <CInputGroup className="mb-3">
-                  <CFormInput
+                  <CFormSelect
                     name="category_id"
                     value={formData.category_id}
                     onChange={handleChange}
-                    placeholder="Category_id"
-                    autoComplete="category_id"
-                  />
+                    aria-label="Category_id"
+                  >
+                    <option value="">Select Category</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                  </CFormSelect>
                 </CInputGroup>
                 <CInputGroup className="mb-3">
-                  <CFormInput
-                    name=" account_id"
+                  <CFormSelect
+                    name="account_id"
                     value={formData.account_id}
                     onChange={handleChange}
-                    placeholder=" Account_id"
-                    autoComplete=" account_id"
-                  />
+                    aria-label="Account_id"
+                  >
+                    <option value="">Select Account</option>
+                    <option value="1">Account 1</option>
+                    <option value="2">Account 2</option>
+                    <option value="3">Account 3</option>
+                  </CFormSelect>
                 </CInputGroup>
                 <CInputGroup className="mb-3">
                   <CFormInput
