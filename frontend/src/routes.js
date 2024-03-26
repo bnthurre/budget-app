@@ -7,6 +7,12 @@ const CategoryForm = React.lazy(() => import('./views/accounts/categoryForm/cate
 const CategoryList = React.lazy(() => import('./views/accounts/categoryList/categoryList'))
 
 
+//budget
+const budgetAllocationForm = React.lazy(() => import('./views/budget/budgetAllocationForm/budgetAllocationForm'))
+const budgetAllocationList = React.lazy(() => import('./views/budget/budgetAllocationList/budgetAllocationList'))
+const budgetPaymentForm = React.lazy(() => import('./views/budget/budgetPaymentForm/budgetPaymentForm'))
+const budgetPaymentList = React.lazy(() => import('./views/budget/budgetPaymentList/budgetPaymentList'))
+
 // Base
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
 const Breadcrumbs = React.lazy(() => import('./views/base/breadcrumbs/Breadcrumbs'))
@@ -57,10 +63,15 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/accounts', name: 'Accounts', element: AccountLists, exact: true },
-  { path: '/accounts/accountForm', name: 'AccountForm', element: AccountForm},
+  { path: '/accounts/accountForm', name: 'Create Account', element: AccountForm},
   { path: '/accounts/AccountLists', name: 'AccountLists', element: AccountLists},
   { path: '/accounts/categoryForm', name: 'Create Category', element: CategoryForm },
   { path: '/accounts/categoryList', name: 'Category Lists', element: CategoryList},
+  { path: '/budget', name: 'Budget', element: budgetAllocationList, exact: true },
+  { path: '/budget/budgetAllocationForm', name: ' Create BudgetAllocation', element: budgetAllocationForm},
+  { path: '/budget/budgetAllocationList', name: 'BudgtAllocation List', element: budgetAllocationList},
+  { path: '/budget/budgetPaymentForm', name: 'Create budgetPayment', element: budgetPaymentForm },
+  { path: '/budget/budgetPaymentList', name: 'BudgetPayment List', element: budgetPaymentList},
   { path: '/base', name: 'Base', element: Cards, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },
   { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
