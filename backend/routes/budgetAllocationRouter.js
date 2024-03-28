@@ -6,7 +6,7 @@ const budgetAllocationController = require('../controllers/budgetAllocationContr
 router.post('/create-budget-allocation', budgetAllocationController.createBudgetAllocation);
 
 //get All
-router.get('/get-budget-allocation', budgetAllocationController.getAllBudgetAllocations)
+router.post('/get-budget-allocation', budgetAllocationController.getAllBudgetAllocations)
 
 //get by id
 router.get('/get-budgetallocationById/:id', budgetAllocationController.getBudgetAllocationById);

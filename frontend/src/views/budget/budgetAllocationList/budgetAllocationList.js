@@ -25,7 +25,7 @@ const Tables = () => {
   useEffect(() => {
     const fetchallocation = async () => {
       try {
-        const response = await axios.get('http://localhost:7001/get-budget-allocation')
+        const response = await axios.post('http://localhost:7001/get-budget-allocation')
         setallocation(response.data)
       } catch (error) {
         console.error('Error fetching allocations:', error)
@@ -124,8 +124,8 @@ const Tables = () => {
                         onChange={() => toggleRowSelection(allocations._id)}
                       />
                     </CTableHeaderCell>
-                    <CTableHeaderCell scope="row">{allocations.category}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocations.account_id}</CTableHeaderCell>
+                    <CTableHeaderCell scope="row">{allocations.categories.name}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocations.accounts.account_number}</CTableHeaderCell>
                     <CTableHeaderCell>{allocations.budget_amount}</CTableHeaderCell>
                     <CTableHeaderCell>{allocations.year}</CTableHeaderCell>
                     <CTableHeaderCell>{allocations.budget_date}</CTableHeaderCell>
