@@ -132,7 +132,7 @@ const Tables = () => {
                     <CTableHeaderCell>{allocations.description}</CTableHeaderCell>
                     <CTableHeaderCell>
                       <CButton color="danger" size="sm">
-                        <CIcon icon={cilDelete} onClick={() => handleDelete(account._id)} />
+                        <CIcon icon={cilDelete} onClick={() => handleDelete(allocations._id)} />
                       </CButton>
                     </CTableHeaderCell>
                   </CTableRow>
