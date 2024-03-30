@@ -14,7 +14,8 @@ import {
   CTableHeaderCell,
   CTableHead,
   CTableRow,
-  CPaginationItem
+  CPaginationItem,
+  CTableDataCell
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilDelete } from '@coreui/icons';
@@ -133,15 +134,15 @@ const Tables = () => {
                         onChange={() => toggleRowSelection(account._id)}
                       />
                     </CTableHeaderCell>
-                    <CTableHeaderCell scope="row">{account.account_number}</CTableHeaderCell>
-                    <CTableHeaderCell style={{ fontWeight: 'normal' }}>{account.account_name}</CTableHeaderCell>
-                    <CTableHeaderCell>{account.account_type}</CTableHeaderCell>
-                    <CTableHeaderCell>{account.description}</CTableHeaderCell>
-                    <CTableHeaderCell>
+                    <CTableDataCell>{account.account_number}</CTableDataCell>
+                    <CTableDataCell>{account.account_name}</CTableDataCell>
+                    <CTableDataCell>{account.account_type}</CTableDataCell>
+                    <CTableDataCell>{account.description}</CTableDataCell>
+                    <CTableDataCell>
                       <CButton color="danger" size="sm">
                         <CIcon icon={cilDelete} onClick={() => handleDelete(account._id)} />
                       </CButton>
-                    </CTableHeaderCell>
+                    </CTableDataCell>
                   </CTableRow>
                 ))}
               </CTableBody>

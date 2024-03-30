@@ -14,7 +14,8 @@ import {
   CTableHead,
   CTableRow,
   CPaginationItem,
-  CPagination
+  CPagination,
+  CTableDataCell
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilDelete } from '@coreui/icons'
@@ -132,17 +133,17 @@ const Tables = () => {
                         onChange={() => toggleRowSelection(allocation._id)}
                       />
                     </CTableHeaderCell>
-                    <CTableHeaderCell scope="row">{allocation.categories.name}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocation.accounts.account_number}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocation.budget_amount}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocation.year}</CTableHeaderCell>
-                    <CTableHeaderCell>{new Date(allocation.budget_date).toLocaleDateString()}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocation.description}</CTableHeaderCell>
-                    <CTableHeaderCell>
+                    <CTableDataCell>{allocation.categories.name}</CTableDataCell>
+                    <CTableDataCell>{allocation.accounts.account_number}</CTableDataCell>
+                    <CTableDataCell>{allocation.budget_amount}</CTableDataCell>
+                    <CTableDataCell>{allocation.year}</CTableDataCell>
+                    <CTableDataCell>{new Date(allocation.budget_date).toLocaleDateString()}</CTableDataCell>
+                    <CTableDataCell>{allocation.description}</CTableDataCell>
+                    <CTableDataCell>
                       <CButton color="danger" size="sm">
                         <CIcon icon={cilDelete} onClick={() => handleDelete(allocations._id)} />
                       </CButton>
-                    </CTableHeaderCell>
+                    </CTableDataCell>
                   </CTableRow>
                 ))}
               </CTableBody>
