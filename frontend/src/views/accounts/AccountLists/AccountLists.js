@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -15,62 +15,64 @@ import {
   CTableHead,
   CTableRow,
   CPaginationItem
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilDelete } from '@coreui/icons'
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilDelete } from '@coreui/icons';
 
 const PAGE_SIZE = 5; // Number of items per page
 
 const Tables = () => {
-  const [accounts, setAccounts] = useState([])
-  const [selectedRows, setSelectedRows] = useState([])
-  const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [accounts, setAccounts] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await axios.get(`http://localhost:7001/get-accounts?page=${currentPage}&size=${PAGE_SIZE}`)
-        setAccounts(response.data)
+        const response = await axios.get(`http://localhost:7001/get-accounts?page=${currentPage}&size=${PAGE_SIZE}`);
+        setAccounts(response.data);
       } catch (error) {
-        console.error('Error fetching accounts:', error)
+        console.error('Error fetching accounts:', error);
       }
-    }
+    };
 
-    fetchAccounts()
-  }, [currentPage])
+    fetchAccounts();
+  }, [currentPage]);
 
   useEffect(() => {
     if (selectAllChecked) {
-      setSelectedRows(accounts.map((account) => account._id))
+      setSelectedRows(accounts.map((account) => account._id));
     } else {
-      setSelectedRows([])
+      setSelectedRows([]);
     }
-  }, [selectAllChecked, accounts])
+  }, [selectAllChecked, accounts]);
 
   const toggleRowSelection = (accountId) => {
-    const selectedIndex = selectedRows.indexOf(accountId)
+    const selectedIndex = selectedRows.indexOf(accountId);
     if (selectedIndex === -1) {
-      setSelectedRows([...selectedRows, accountId])
+      setSelectedRows([...selectedRows, accountId]);
     } else {
-      setSelectedRows(selectedRows.filter((id) => id !== accountId))
+      setSelectedRows(selectedRows.filter((id) => id !== accountId));
     }
-  }
+  };
 
   const toggleSelectAll = () => {
-    setSelectAllChecked(!selectAllChecked)
-  }
+    setSelectAllChecked(!selectAllChecked);
+  };
 
   const handleDelete = async (accountId) => {
     try {
-      await axios.delete(`http://localhost:7001/delete-account/${accountId}`)
-      setAccounts(accounts.filter((account) => account._id !== accountId))
+      await axios.delete(`http://localhost:7001/delete-account/${accountId}`);
+      setAccounts(accounts.filter((account) => account._id !== accountId));
     } catch (error) {
-      console.error('Error deleting account:', error)
+      console.error('Error deleting account:', error);
     }
-  }
+  };
 
   const pageCount = Math.ceil(accounts.length / PAGE_SIZE);
+
+  const paginatedAccounts = accounts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   return (
     <CRow>
@@ -122,7 +124,7 @@ const Tables = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {accounts.map((account) => (
+                {paginatedAccounts.map((account) => (
                   <CTableRow key={account._id}>
                     <CTableHeaderCell>
                       <input
@@ -145,22 +147,26 @@ const Tables = () => {
               </CTableBody>
             </CTable>
             <CPagination aria-label="Page navigation example">
-              <CPaginationItem onClick={() => setCurrentPage(currentPage - 1)}>Previous</CPaginationItem>
+              <CPaginationItem disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+                Previous
+              </CPaginationItem>
               {[...Array(pageCount).keys()].map((index) => (
                 <CPaginationItem key={index} active={index + 1 === currentPage} onClick={() => setCurrentPage(index + 1)}>
                   {index + 1}
                 </CPaginationItem>
               ))}
-              <CPaginationItem onClick={() => setCurrentPage(currentPage + 1)}>Next</CPaginationItem>
+              <CPaginationItem disabled={currentPage === pageCount} onClick={() => setCurrentPage(currentPage + 1)}>
+                Next
+              </CPaginationItem>
             </CPagination>
           </CCardBody>
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default Tables
+export default Tables;
 
 // import React, { useState, useEffect } from 'react'
 // import axios from 'axios'
@@ -171,25 +177,30 @@ export default Tables
 //   CCardBody,
 //   CCardHeader,
 //   CCol,
+//   CPagination,
 //   CRow,
 //   CTable,
 //   CTableBody,
 //   CTableHeaderCell,
 //   CTableHead,
 //   CTableRow,
+//   CPaginationItem
 // } from '@coreui/react'
 // import CIcon from '@coreui/icons-react'
 // import { cilDelete } from '@coreui/icons'
+
+// const PAGE_SIZE = 5; // Number of items per page
 
 // const Tables = () => {
 //   const [accounts, setAccounts] = useState([])
 //   const [selectedRows, setSelectedRows] = useState([])
 //   const [selectAllChecked, setSelectAllChecked] = useState(false)
+//   const [currentPage, setCurrentPage] = useState(1);
 
 //   useEffect(() => {
 //     const fetchAccounts = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:7001/get-accounts')
+//         const response = await axios.get(`http://localhost:7001/get-accounts?page=${currentPage}&size=${PAGE_SIZE}`)
 //         setAccounts(response.data)
 //       } catch (error) {
 //         console.error('Error fetching accounts:', error)
@@ -197,7 +208,7 @@ export default Tables
 //     }
 
 //     fetchAccounts()
-//   }, [])
+//   }, [currentPage])
 
 //   useEffect(() => {
 //     if (selectAllChecked) {
@@ -219,6 +230,7 @@ export default Tables
 //   const toggleSelectAll = () => {
 //     setSelectAllChecked(!selectAllChecked)
 //   }
+
 //   const handleDelete = async (accountId) => {
 //     try {
 //       await axios.delete(`http://localhost:7001/delete-account/${accountId}`)
@@ -227,6 +239,9 @@ export default Tables
 //       console.error('Error deleting account:', error)
 //     }
 //   }
+
+//   const pageCount = Math.ceil(accounts.length / PAGE_SIZE);
+
 //   return (
 //     <CRow>
 //       <CCol xs={12}>
@@ -255,7 +270,7 @@ export default Tables
 //                   {selectedRows.length === accounts.length ? (
 //                     <div>All accounts are selected</div>
 //                   ) : (
-//                     <div>{selectedRows.length}selected</div>
+//                     <div>{selectedRows.length} selected</div>
 //                   )}
 //                 </div>
 //               )}
@@ -299,6 +314,15 @@ export default Tables
 //                 ))}
 //               </CTableBody>
 //             </CTable>
+//             <CPagination aria-label="Page navigation example">
+//               <CPaginationItem onClick={() => setCurrentPage(currentPage - 1)}>Previous</CPaginationItem>
+//               {[...Array(pageCount).keys()].map((index) => (
+//                 <CPaginationItem key={index} active={index + 1 === currentPage} onClick={() => setCurrentPage(index + 1)}>
+//                   {index + 1}
+//                 </CPaginationItem>
+//               ))}
+//               <CPaginationItem onClick={() => setCurrentPage(currentPage + 1)}>Next</CPaginationItem>
+//             </CPagination>
 //           </CCardBody>
 //         </CCard>
 //       </CCol>
