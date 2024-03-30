@@ -13,6 +13,8 @@ import {
   CTableHeaderCell,
   CTableHead,
   CTableRow,
+  CPaginationItem,
+  CPagination
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilDelete } from '@coreui/icons'
@@ -21,11 +23,14 @@ const Tables = () => {
   const [allocations, setallocation] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 5 // Number of items per page
 
   useEffect(() => {
     const fetchallocation = async () => {
       try {
-        const response = await axios.post('http://localhost:7001/get-budget-allocation')
+        const response = await axios.post(`http://localhost:7001/get-budget-allocation?page=${currentPage}&size=${PAGE_SIZE}`)
         setallocation(response.data)
       } catch (error) {
         console.error('Error fetching allocations:', error)
@@ -33,8 +38,8 @@ const Tables = () => {
     }
 
     fetchallocation()
-  }, [])
-
+  }, [currentPage])
+ 
   useEffect(() => {
     if (selectAllChecked) {
       setSelectedRows(allocations.map((account) => account._id))
@@ -63,6 +68,9 @@ const Tables = () => {
       console.error('Error deleting allocations:', error)
     }
   }
+  const pageCount = Math.ceil(allocations.length / PAGE_SIZE)
+
+  const paginatedAccounts = allocations.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
   return (
     <CRow>
       <CCol xs={12}>
@@ -115,21 +123,21 @@ const Tables = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {allocations.map((allocations) => (
-                  <CTableRow key={allocations._id}>
+              {paginatedAccounts.map((allocation) => (
+                  <CTableRow key={allocation._id}>
                     <CTableHeaderCell>
                       <input
                         type="checkbox"
-                        checked={selectedRows.includes(allocations._id)}
-                        onChange={() => toggleRowSelection(allocations._id)}
+                        checked={selectedRows.includes( allocation._id)}
+                        onChange={() => toggleRowSelection(allocation._id)}
                       />
                     </CTableHeaderCell>
-                    <CTableHeaderCell scope="row">{allocations.categories.name}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocations.accounts.account_number}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocations.budget_amount}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocations.year}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocations.budget_date}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocations.description}</CTableHeaderCell>
+                    <CTableHeaderCell scope="row">{allocation.categories.name}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocation.accounts.account_number}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocation.budget_amount}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocation.year}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocation.budget_date}</CTableHeaderCell>
+                    <CTableHeaderCell>{allocation.description}</CTableHeaderCell>
                     <CTableHeaderCell>
                       <CButton color="danger" size="sm">
                         <CIcon icon={cilDelete} onClick={() => handleDelete(allocations._id)} />
@@ -139,6 +147,19 @@ const Tables = () => {
                 ))}
               </CTableBody>
             </CTable>
+            <CPagination aria-label="Page navigation example">
+              <CPaginationItem disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+                Previous
+              </CPaginationItem>
+              {[...Array(pageCount).keys()].map((index) => (
+                <CPaginationItem key={index} active={index + 1 === currentPage} onClick={() => setCurrentPage(index + 1)}>
+                  {index + 1}
+                </CPaginationItem>
+              ))}
+              <CPaginationItem disabled={currentPage === pageCount} onClick={() => setCurrentPage(currentPage + 1)}>
+                Next
+              </CPaginationItem>
+            </CPagination>
           </CCardBody>
         </CCard>
       </CCol>
