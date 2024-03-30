@@ -6,15 +6,15 @@ const budgetPaymentController = require('../controllers/budgetPaymentController'
 router.post('/create-budget-payment', budgetPaymentController.createBudgetPayment);
 
 //get All
-router.get('/get-budget-payment', budgetPaymentController.getBudgetPayments)
+router.post('/get-budget-payment', budgetPaymentController.getBudgetPayments)
 
 //get by id
-router.get('/get-budgetPaymentById', budgetPaymentController.getBudgetPaymentsById);
+router.get('/get-budgetPaymentById/:id', budgetPaymentController.getBudgetPaymentsById);
 
 //update
-router.put('/update-budget-payment', budgetPaymentController.updateBudgetPayment)
+router.put('/update-budget-payment/:id', budgetPaymentController.updateBudgetPayment)
 
 //delete by id
-router.delete('/delete-budget-payment', budgetPaymentController.deleteBudgetPayment)
+router.delete('/delete-budget-payment/:id', budgetPaymentController.deleteBudgetPayment)
 
 module.exports = router;

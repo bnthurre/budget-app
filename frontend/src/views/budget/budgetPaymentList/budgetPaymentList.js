@@ -13,63 +13,71 @@ import {
   CTableHeaderCell,
   CTableHead,
   CTableRow,
+  CPaginationItem,
+  CPagination
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilDelete } from '@coreui/icons'
 
 const Tables = () => {
-  const [categories, setcategories] = useState([])
+  const [Payment, setallocation] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 5 // Number of items per page
 
   useEffect(() => {
-    const fetchcategories = async () => {
+    const fetchPayment = async () => {
       try {
-        const response = await axios.get('http://localhost:7001/get-categories')
-        setcategories(response.data)
+        const response = await axios.post(`http://localhost:7001/get-budget-payment?page=${currentPage}&size=${PAGE_SIZE}`)
+        setallocation(response.data)
       } catch (error) {
-        console.error('Error fetching categories:', error)
+        console.error('Error fetching Payment:', error)
       }
     }
 
-    fetchcategories()
-  }, [])
-
+    fetchPayment()
+  }, [currentPage])
+ 
   useEffect(() => {
     if (selectAllChecked) {
-      setSelectedRows(categories.map((category) => category._id))
+      setSelectedRows(Payment.map((account) => account._id))
     } else {
       setSelectedRows([])
     }
-  }, [selectAllChecked, categories])
+  }, [selectAllChecked, Payment])
 
-  const toggleRowSelection = (categoryId) => {
-    const selectedIndex = selectedRows.indexOf(categoryId)
+  const toggleRowSelection = (accountId) => {
+    const selectedIndex = selectedRows.indexOf(accountId)
     if (selectedIndex === -1) {
-      setSelectedRows([...selectedRows, categoryId])
+      setSelectedRows([...selectedRows, accountId])
     } else {
-      setSelectedRows(selectedRows.filter((id) => id !== categoryId))
+      setSelectedRows(selectedRows.filter((id) => id !== accountId))
     }
   }
 
   const toggleSelectAll = () => {
     setSelectAllChecked(!selectAllChecked)
   }
-  const handleDelete = async (categoryId) => {
+  const handleDelete = async (paymentId) => {
     try {
-      await axios.delete(`http://localhost:7001/delete-category/${categoryId}`)
-      setcategories(categories.filter((category) => category._id !== categoryId))
+      await axios.delete(`http://localhost:7001/delete-budget-payment/${paymentId}`)
+      setallocation(Payment.filter((Payment) => Payment._id !== paymentId))
     } catch (error) {
-      console.error('Error deleting category:', error)
+      console.error('Error deleting Payment:', error)
     }
   }
+  const pageCount = Math.ceil(Payment.length / PAGE_SIZE)
+
+  const paginatedAccounts = Payment.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
   return (
     <CRow>
       <CCol xs={12}>
         <div className="d-flex justify-content-end mb-3">
-          <Link to="/accounts/categoryform">
+          <Link to="/budget/budgetPaymentForm">
             <CButton color="success" size="sm">
-              Create Category
+              Create Payment
             </CButton>
           </Link>
         </div>
@@ -84,12 +92,12 @@ const Tables = () => {
               }}
             >
               <div>
-                <strong>Category</strong> <small>Lists</small>
+                <strong>Payment</strong> <small>Lists</small>
               </div>
               {selectedRows.length > 0 && (
                 <div className="mb-2">
-                  {selectedRows.length === categories.length ? (
-                    <div>All categories are selected</div>
+                  {selectedRows.length === Payment.length ? (
+                    <div>All Payment are selected</div>
                   ) : (
                     <div>{selectedRows.length}selected</div>
                   )}
@@ -104,33 +112,54 @@ const Tables = () => {
                 <CTableRow>
                   <CTableHeaderCell>
                     <input type="checkbox" checked={selectAllChecked} onChange={toggleSelectAll} />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell>Name</CTableHeaderCell>
-                  <CTableHeaderCell>Description</CTableHeaderCell>
+                    </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Category</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">account Number</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Paid Amount</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Year</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Payment Date</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Description</CTableHeaderCell>
                   <CTableHeaderCell></CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {categories.map((category) => (
-                  <CTableRow key={category._id}>
+              {paginatedAccounts.map((payment) => (
+                  <CTableRow key={payment._id}>
                     <CTableHeaderCell>
                       <input
                         type="checkbox"
-                        checked={selectedRows.includes(category._id)}
-                        onChange={() => toggleRowSelection(category._id)}
+                        checked={selectedRows.includes( payment._id)}
+                        onChange={() => toggleRowSelection(payment._id)}
                       />
                     </CTableHeaderCell>
-                    <CTableHeaderCell>{category.name}</CTableHeaderCell>
-                    <CTableHeaderCell>{category.description}</CTableHeaderCell>
+                    <CTableHeaderCell scope="row">{payment.categories.name}</CTableHeaderCell>
+                    <CTableHeaderCell>{payment.accounts.account_number}</CTableHeaderCell>
+                    <CTableHeaderCell>{payment.paid_amount}</CTableHeaderCell>
+                    <CTableHeaderCell>{payment.year}</CTableHeaderCell>
+                    <CTableHeaderCell>{new Date(payment.payment_date).toLocaleDateString()}</CTableHeaderCell>
+                    <CTableHeaderCell>{payment.description}</CTableHeaderCell>
                     <CTableHeaderCell>
                       <CButton color="danger" size="sm">
-                        <CIcon icon={cilDelete} onClick={() => handleDelete(category._id)} />
+                        <CIcon icon={cilDelete} onClick={() => handleDelete(Payment._id)} />
                       </CButton>
                     </CTableHeaderCell>
                   </CTableRow>
                 ))}
               </CTableBody>
             </CTable>
+            <CPagination aria-label="Page navigation example">
+              <CPaginationItem disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+                Previous
+              </CPaginationItem>
+              {[...Array(pageCount).keys()].map((index) => (
+                <CPaginationItem key={index} active={index + 1 === currentPage} onClick={() => setCurrentPage(index + 1)}>
+                  {index + 1}
+                </CPaginationItem>
+              ))}
+              <CPaginationItem disabled={currentPage === pageCount} onClick={() => setCurrentPage(currentPage + 1)}>
+                Next
+              </CPaginationItem>
+            </CPagination>
           </CCardBody>
         </CCard>
       </CCol>
@@ -139,4 +168,3 @@ const Tables = () => {
 }
 
 export default Tables
-

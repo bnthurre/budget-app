@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const budgetPaymentSchema = new mongoose.Schema({
-    category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     account_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
     paid_amount: { type: Number, required: true },
     year: { type: Number, required: true },

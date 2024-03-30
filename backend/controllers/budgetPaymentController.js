@@ -11,9 +11,35 @@ exports.createBudgetPayment = async (req, res) => {
 };
 
 //retrieve all budget payments
+
 exports.getBudgetPayments = async (req, res) => {
   try {
-    const budgetPayments = await BudgetPayment.find();
+    const budgetPayments = await BudgetPayment.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as : "categories"
+        },
+      },
+      {
+        $unwind: "$categories"
+      },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "account_id",
+          foreignField: "_id",
+          as : "accounts"
+        },
+      },
+      {
+        $unwind: "$accounts"
+      },
+
+    ]);
+    console.log(budgetPayments);
     res.status(200).json(budgetPayments);
   } catch (error) {
     res.status(500).json({ message: error.message });
