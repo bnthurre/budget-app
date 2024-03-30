@@ -110,7 +110,7 @@ const Tables = () => {
           </CCardHeader>
 
           <CCardBody>
-            <CTable striped>
+            <CTable hover>
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell>
