@@ -163,7 +163,7 @@ const BudgetPayment = () => {
                   />
                 </CInputGroup>
                 <div className="d-grid">
-                  <CButton type="submit" color="success">
+                <CButton type="submit" color="primary">
                     Create BudgetPayment
                   </CButton>
                 </div>

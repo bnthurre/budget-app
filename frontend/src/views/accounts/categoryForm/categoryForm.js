@@ -77,7 +77,7 @@ const Category = () => {
                   />
                 </CInputGroup>
                 <div className="d-grid">
-                  <CButton type="submit" color="success">
+                <CButton type="submit" color="primary">
                     Create Category
                   </CButton>
                 </div>
