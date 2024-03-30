@@ -136,7 +136,7 @@ const Tables = () => {
                     <CTableHeaderCell>{allocation.accounts.account_number}</CTableHeaderCell>
                     <CTableHeaderCell>{allocation.budget_amount}</CTableHeaderCell>
                     <CTableHeaderCell>{allocation.year}</CTableHeaderCell>
-                    <CTableHeaderCell>{allocation.budget_date}</CTableHeaderCell>
+                    <CTableHeaderCell>{new Date(allocation.budget_date).toLocaleDateString()}</CTableHeaderCell>
                     <CTableHeaderCell>{allocation.description}</CTableHeaderCell>
                     <CTableHeaderCell>
                       <CButton color="danger" size="sm">
