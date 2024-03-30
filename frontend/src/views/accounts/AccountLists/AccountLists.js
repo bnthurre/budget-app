@@ -79,7 +79,7 @@ const Tables = () => {
       <CCol xs={12}>
         <div className="d-flex justify-content-end mb-3">
           <Link to="/accounts/accountform">
-            <CButton color="success" size="sm">
+            <CButton  color="primary" size="sm" >
               Create Account
             </CButton>
           </Link>
@@ -125,7 +125,7 @@ const Tables = () => {
               </CTableHead>
               <CTableBody>
                 {paginatedAccounts.map((account) => (
-                  <CTableRow key={account._id}>
+                  <CTableRow key={account._id}  style={{ fontWeight: 'normal' }}>
                     <CTableHeaderCell>
                       <input
                         type="checkbox"
@@ -134,7 +134,7 @@ const Tables = () => {
                       />
                     </CTableHeaderCell>
                     <CTableHeaderCell scope="row">{account.account_number}</CTableHeaderCell>
-                    <CTableHeaderCell>{account.account_name}</CTableHeaderCell>
+                    <CTableHeaderCell style={{ fontWeight: 'normal' }}>{account.account_name}</CTableHeaderCell>
                     <CTableHeaderCell>{account.account_type}</CTableHeaderCell>
                     <CTableHeaderCell>{account.description}</CTableHeaderCell>
                     <CTableHeaderCell>

@@ -76,7 +76,7 @@ const Tables = () => {
       <CCol xs={12}>
         <div className="d-flex justify-content-end mb-3">
           <Link to="/budget/budgetAllocationForm">
-            <CButton color="success" size="sm">
+          <CButton  color="primary" size="sm" >
               Create allocations
             </CButton>
           </Link>
