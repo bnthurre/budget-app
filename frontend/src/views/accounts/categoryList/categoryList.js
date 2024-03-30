@@ -13,6 +13,8 @@ import {
   CTableHeaderCell,
   CTableHead,
   CTableRow,
+  CPaginationItem,
+  CPagination
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilDelete } from '@coreui/icons'
@@ -21,11 +23,16 @@ const Tables = () => {
   const [categories, setcategories] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 5 // Number of items per page
 
   useEffect(() => {
     const fetchcategories = async () => {
       try {
-        const response = await axios.get('http://localhost:7001/get-categories')
+        const response = await axios.get(
+          `http://localhost:7001/get-categories?page=${currentPage}&size=${PAGE_SIZE}`,
+        )
         setcategories(response.data)
       } catch (error) {
         console.error('Error fetching categories:', error)
@@ -33,7 +40,7 @@ const Tables = () => {
     }
 
     fetchcategories()
-  }, [])
+  }, [currentPage])
 
   useEffect(() => {
     if (selectAllChecked) {
@@ -63,6 +70,9 @@ const Tables = () => {
       console.error('Error deleting category:', error)
     }
   }
+  const pageCount = Math.ceil(categories.length / PAGE_SIZE)
+
+  const paginatedAccounts = categories.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
   return (
     <CRow>
       <CCol xs={12}>
@@ -111,7 +121,7 @@ const Tables = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {categories.map((category) => (
+                {paginatedAccounts.map((category) => (
                   <CTableRow key={category._id}>
                     <CTableHeaderCell>
                       <input
@@ -131,6 +141,29 @@ const Tables = () => {
                 ))}
               </CTableBody>
             </CTable>
+            <CPagination aria-label="Page navigation example">
+              <CPaginationItem
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
+              </CPaginationItem>
+              {[...Array(pageCount).keys()].map((index) => (
+                <CPaginationItem
+                  key={index}
+                  active={index + 1 === currentPage}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  {index + 1}
+                </CPaginationItem>
+              ))}
+              <CPaginationItem
+                disabled={currentPage === pageCount}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </CPaginationItem>
+            </CPagination>
           </CCardBody>
         </CCard>
       </CCol>
@@ -139,4 +172,3 @@ const Tables = () => {
 }
 
 export default Tables
-
