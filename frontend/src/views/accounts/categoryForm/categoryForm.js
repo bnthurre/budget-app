@@ -21,23 +21,30 @@ const Category = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Check if category name is empty
+    if (formData.name.trim() === '') {
+      setError('Category name is required');
+      return;
+    }
+  
     try {
       const response = await axios.post('http://localhost:7001/create-category', formData);
       console.log('Category created:', response.data);
       // Reset form fields after successful submission
       setFormData({
         name: '',
-        description: '',    
+        description: '',
       });
       setError('');
-      navigate('/accounts/categoryList')
+      navigate('/accounts/categoryList');
     } catch (error) {
       console.error('Error creating category:', error);
       if (error.response && error.response.status === 409) {
@@ -47,6 +54,7 @@ const Category = () => {
       }
     }
   };
+  
 
   return (
     <CContainer>
@@ -77,7 +85,7 @@ const Category = () => {
                   />
                 </CInputGroup>
                 <div className="d-grid">
-                <CButton type="submit" color="primary">
+                  <CButton type="submit" color="primary">
                     Create Category
                   </CButton>
                 </div>
@@ -91,3 +99,4 @@ const Category = () => {
 };
 
 export default Category;
+

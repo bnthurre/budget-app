@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css'; // Import DatePicker styles
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import {
   CButton,
   CCard,
@@ -34,11 +34,9 @@ const BudgetAllocation = () => {
   useEffect(() => {
     const fetchCategoriesAndAccounts = async () => {
       try {
-        // Fetch categories
         const categoriesResponse = await axios.get('http://localhost:7001/get-categories')
         setCategories(categoriesResponse.data)
 
-        // Fetch accounts
         const accountsResponse = await axios.get('http://localhost:7001/get-accounts')
         setAccounts(accountsResponse.data)
       } catch (error) {
@@ -52,11 +50,37 @@ const BudgetAllocation = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
   const handleDateChange = (date) => {
     setFormData({ ...formData, budget_date: date })
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const validationErrors = {}
+
+    if (!formData.category) {
+      validationErrors.category = 'Category is required'
+    }
+    if (!formData.account_id) {
+      validationErrors.account_id = 'Account number is required'
+    }
+    if (!formData.budget_amount) {
+      validationErrors.budget_amount = 'Budget amount is required'
+    }
+    if (!formData.year) {
+      validationErrors.year = 'Year is required'
+    }
+
+    // Set error messages for specific fields
+    setError(validationErrors)
+
+    // Check if any validation errors exist
+    if (Object.keys(validationErrors).length > 0) {
+      return
+    }
+
     try {
       const response = await axios.post('http://localhost:7001/create-budget-allocation', formData)
       console.log('BudgetAllocation created:', response.data)
@@ -69,14 +93,15 @@ const BudgetAllocation = () => {
         budget_date: '',
         description: '',
       })
-      setError('')
+      // Clear all errors
+      setError({})
       navigate('/budget/BudgetAllocationList')
     } catch (error) {
       console.error('Error creating BudgetAllocation:', error)
-      setError('Error creating BudgetAllocation')
+      setError({ general: 'Error creating BudgetAllocation' })
     }
   }
-  // Generate an array of years starting from the current year and going back 10 years
+
   const years = Array.from({ length: 10 }, (_, index) => new Date().getFullYear() - index)
 
   return (
@@ -88,7 +113,8 @@ const BudgetAllocation = () => {
               <CForm onSubmit={handleSubmit}>
                 <h1>Create Budget Allocation</h1>
                 <p className="text-body-secondary">Create your Budget Allocation</p>
-                {error && <div className="text-danger mb-3">{error}</div>}
+                {error.general && <div className="text-danger mb-3">{error.general}</div>}
+                {error.category && <div className="text-danger mb-3">{error.category}</div>}
                 <CInputGroup className="mb-3">
                   <CFormSelect
                     name="category"
@@ -104,6 +130,7 @@ const BudgetAllocation = () => {
                     ))}
                   </CFormSelect>
                 </CInputGroup>
+                {error.account_id && <div className="text-danger mb-3">{error.account_id}</div>}
                 <CInputGroup className="mb-3">
                   <CFormSelect
                     name="account_id"
@@ -119,6 +146,9 @@ const BudgetAllocation = () => {
                     ))}
                   </CFormSelect>
                 </CInputGroup>
+                {error.budget_amount && (
+                  <div className="text-danger mb-3">{error.budget_amount}</div>
+                )}
                 <CInputGroup className="mb-3">
                   <CFormInput
                     name="budget_amount"
@@ -129,6 +159,7 @@ const BudgetAllocation = () => {
                     autoComplete="budget_amount"
                   />
                 </CInputGroup>
+                {error.year && <div className="text-danger mb-3">{error.year}</div>}
                 <CInputGroup className="mb-3">
                   <CFormSelect
                     name="year"
@@ -163,7 +194,7 @@ const BudgetAllocation = () => {
                   />
                 </CInputGroup>
                 <div className="d-grid">
-                <CButton type="submit" color="primary">
+                  <CButton type="submit" color="primary">
                     Create BudgetAllocation
                   </CButton>
                 </div>
@@ -177,3 +208,4 @@ const BudgetAllocation = () => {
 }
 
 export default BudgetAllocation
+

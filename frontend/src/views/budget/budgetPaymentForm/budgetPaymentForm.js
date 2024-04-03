@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css'; // Import DatePicker styles
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css' // Import DatePicker styles
 import {
   CButton,
   CCard,
@@ -26,7 +26,7 @@ const BudgetPayment = () => {
     description: '',
   })
 
-  const [error, setError] = useState('')
+  const [error, setError] = useState({})
   const [categories, setCategories] = useState([])
   const [accounts, setAccounts] = useState([])
   const navigate = useNavigate()
@@ -57,6 +57,28 @@ const BudgetPayment = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const validationErrors = {}
+
+    if (!formData.category) {
+      validationErrors.category = 'Category is required'
+    }
+    if (!formData.account_id) {
+      validationErrors.account_id = 'Account number is required'
+    }
+    if (!formData.paid_amount) {
+      validationErrors.paid_amount = 'Paid amount is required'
+    }
+    if (!formData.year) {
+      validationErrors.year = 'Year is required'
+    }
+
+    setError(validationErrors)
+
+    if (Object.keys(validationErrors).length > 0) {
+      return
+    }
+
     try {
       const response = await axios.post('http://localhost:7001/create-budget-payment', formData)
       console.log('Budget payment created:', response.data)
@@ -69,7 +91,7 @@ const BudgetPayment = () => {
         payment_date: '',
         description: '',
       })
-      setError('')
+      setError({})
       navigate('/budget/BudgetPaymentList')
     } catch (error) {
       console.error('Error creating Budget payment:', error)
@@ -88,7 +110,8 @@ const BudgetPayment = () => {
               <CForm onSubmit={handleSubmit}>
                 <h1>Create Budget Payment</h1>
                 <p className="text-body-secondary">Create your Budget Payment</p>
-                {error && <div className="text-danger mb-3">{error}</div>}
+                {error.category && <div className="text-danger mb-3">{error.category}</div>}
+
                 <CInputGroup className="mb-3">
                   <CFormSelect
                     name="category"
@@ -104,6 +127,8 @@ const BudgetPayment = () => {
                     ))}
                   </CFormSelect>
                 </CInputGroup>
+                {error.account_id && <div className="text-danger mb-3">{error.account_id}</div>}
+
                 <CInputGroup className="mb-3">
                   <CFormSelect
                     name="account_id"
@@ -119,6 +144,8 @@ const BudgetPayment = () => {
                     ))}
                   </CFormSelect>
                 </CInputGroup>
+                {error.paid_amount && <div className="text-danger mb-3">{error.paid_amount}</div>}
+
                 <CInputGroup className="mb-3">
                   <CFormInput
                     name="paid_amount"
@@ -129,6 +156,8 @@ const BudgetPayment = () => {
                     autoComplete="paid_amount"
                   />
                 </CInputGroup>
+                {error.year && <div className="text-danger mb-3">{error.year}</div>}
+
                 <CInputGroup className="mb-3">
                   <CFormSelect
                     name="year"
@@ -163,7 +192,7 @@ const BudgetPayment = () => {
                   />
                 </CInputGroup>
                 <div className="d-grid">
-                <CButton type="submit" color="primary">
+                  <CButton type="submit" color="primary">
                     Create BudgetPayment
                   </CButton>
                 </div>
@@ -177,3 +206,4 @@ const BudgetPayment = () => {
 }
 
 export default BudgetPayment
+
