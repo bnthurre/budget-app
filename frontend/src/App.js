@@ -56,7 +56,6 @@ const App = () => {
 
 export default App;
 
-
 // import React, { Suspense, useEffect } from 'react'
 // import { HashRouter, Route, Routes } from 'react-router-dom'
 // import { useSelector } from 'react-redux'

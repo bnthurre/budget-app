@@ -107,7 +107,7 @@ const navigate = useNavigate()
                   </CInputGroup>
                   {error && <p className="text-danger">{error}</p>}
                   <div className="d-grid">
-                    <CButton color="success" onClick={handleRegister}>
+                    <CButton color="primary" onClick={handleRegister}>
                       Create Account
                     </CButton>
                   </div>

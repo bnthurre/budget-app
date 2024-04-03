@@ -86,6 +86,36 @@ const _nav = [
 
   },
   {
+    component: CNavTitle,
+    name: 'Users',
+  },
+  {
+    component: CNavItem,
+    name: 'Create user',
+    to: '/users/userForm',
+    icon: <CIcon icon={cilBank} customClassName="nav-icon" />, 
+  },
+  {
+    component: CNavItem,
+    name: 'Budget allocations',
+    to: '/budget/budgetAllocationList',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Create Budget Payment',
+    to: '/budget/budgetPaymentForm',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+
+  },
+  {
+    component: CNavItem,
+    name: 'Budget Payments',
+    to: '/budget/budgetPaymentList',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+
+  },
+  {
     component: CNavGroup,
     name: 'Pages',
     icon: <CIcon icon={cilStar} customClassName="nav-icon" />,

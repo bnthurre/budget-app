@@ -11,7 +11,7 @@ const CategoryRoute = require('./routes/categoryRoutes')
 const budgetAllocation = require('./routes/budgetAllocationRouter')
 const budgetPayment = require('./routes/budgetPaymentRouter')
 const authRoute = require('./routes/authRoutes')
-const roleRoute = require('./routes/roleRoutes')
+const userRoute = require('./routes/userRoutes')
 const app = express();
 
 app.use(cors()); 
@@ -23,7 +23,7 @@ app.use( AccountRoute)
 app.use( CategoryRoute)
 app.use( budgetAllocation)
 app.use( budgetPayment)
-app.use( roleRoute)
+app.use( userRoute)
 app.use('/api/auth', authRoute)
 app.listen(7001, () => {
     console.log(`Server is running on port ${7001}`);
