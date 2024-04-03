@@ -144,9 +144,9 @@ const Tables = () => {
                     <CTableDataCell>{account.account_type}</CTableDataCell>
                     <CTableDataCell>{account.description}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="danger" size="sm">
+                      
                         <CIcon icon={cilDelete} onClick={() => handleDelete(account._id)} />
-                      </CButton>
+                      
                     </CTableDataCell>
                   </CTableRow>
                 ))}
