@@ -97,8 +97,8 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Budget allocations',
-    to: '/budget/budgetAllocationList',
+    name: 'Users',
+    to: '/users/usersList',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
