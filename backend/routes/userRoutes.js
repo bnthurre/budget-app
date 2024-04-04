@@ -15,7 +15,7 @@ router.get('/get-userById:id', userController.getUserById);
 router.put('/update-user:id', userController.updateUser);
 
 // Delete a user by ID
-router.delete('/delete-user:id', userController.deleteUser);
+router.delete('/delete-user/:id', userController.deleteUser);
 
 // Delete all usersU
 router.post('/delete-many-users', userController.deleteSelectedUsers);

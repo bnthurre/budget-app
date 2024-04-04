@@ -17,9 +17,8 @@ import {
   CPaginationItem,
   CTableDataCell
 } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilDelete } from '@coreui/icons';
 import Dialoga from '../../Dialog';
+
 
 const PAGE_SIZE = 5; // Number of items per page
 
