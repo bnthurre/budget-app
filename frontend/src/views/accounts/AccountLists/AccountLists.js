@@ -21,7 +21,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilDelete, cilPencil } from '@coreui/icons'
-import Dialoga from './Dialog'
+import Dialoga from '../../Dialog'
 
 const PAGE_SIZE = 5 // Number of items per page
 
@@ -161,7 +161,7 @@ const Tables = () => {
                     <CTableDataCell>{account.account_type}</CTableDataCell>
                     <CTableDataCell>{account.description}</CTableDataCell>
                     <CTableDataCell>
-                      <Dialoga accountId={account._id} handleDelete={handleDelete}/>
+                      <Dialoga itemId={account._id} handleDelete={handleDelete}/>
                     </CTableDataCell>
                   </CTableRow>
                 ))}

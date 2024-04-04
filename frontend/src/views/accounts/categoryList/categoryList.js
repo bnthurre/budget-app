@@ -19,6 +19,7 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilDelete } from '@coreui/icons';
+import Dialoga from '../../Dialog';
 
 const Tables = () => {
   const [categories, setCategories] = useState([]);
@@ -147,9 +148,7 @@ const Tables = () => {
                     <CTableDataCell>{category.name}</CTableDataCell>
                     <CTableDataCell>{category.description}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="danger" size="sm">
-                        <CIcon icon={cilDelete} onClick={() => handleDelete(category._id)} />
-                      </CButton>
+                    <Dialoga itemId={category._id} handleDelete={handleDelete}/>
                     </CTableDataCell>
                   </CTableRow>
                 ))}
