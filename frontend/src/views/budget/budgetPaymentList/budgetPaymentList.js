@@ -19,6 +19,7 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilDelete } from '@coreui/icons';
+import Dialoga from '../../Dialog';
 
 const Tables = () => {
   const [payments, setPayments] = useState([]);
@@ -152,9 +153,7 @@ const Tables = () => {
                     <CTableDataCell>{new Date(payment.payment_date).toLocaleDateString()}</CTableDataCell>
                     <CTableDataCell>{payment.description}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="danger" size="sm" onClick={() => handleDelete(payment._id)}>
-                        <CIcon icon={cilDelete} />
-                      </CButton>
+                    <Dialoga itemId={payment._id} handleDelete={handleDelete}/>
                     </CTableDataCell>
                   </CTableRow>
                 ))}

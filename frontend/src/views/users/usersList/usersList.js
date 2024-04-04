@@ -19,6 +19,7 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilDelete } from '@coreui/icons';
+import Dialoga from '../../Dialog';
 
 const PAGE_SIZE = 5; // Number of items per page
 
@@ -152,8 +153,7 @@ const Tables = () => {
                     <CTableDataCell>{user.stateRegion}</CTableDataCell>
                     <CTableDataCell>{user.role}</CTableDataCell>
                     <CTableDataCell>
-                        <CIcon icon={cilDelete} onClick={() => handleDelete(user._id)} />
-                      
+                    <Dialoga itemId={user._id} handleDelete={handleDelete}/>  
                     </CTableDataCell>
                   </CTableRow>
                 ))}
