@@ -9,7 +9,8 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 export default function Dialoga(props) {
   const [openDialog, handleDisplay] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -36,8 +37,17 @@ export default function Dialoga(props) {
   const dialogStyle = {
     padding: "20px",
   };
-
-
+  const navigate = useNavigate();
+  const handleEdit = async () => {
+    try {
+      const response = await axios.get(`http://localhost:7001/get-account/${props.itemId}`);
+      const account = response.data;
+      navigate(`/accounts/accountform?edit=${props.itemId}`, { state: { account } });
+    } catch (error) {
+      console.error('Error fetching account:', error);
+    }
+  };
+  
 
   return (
     <>
@@ -69,7 +79,8 @@ export default function Dialoga(props) {
           </IconButton>
 
           <IconButton
-            onClick={openDialogBox}
+          onClick={handleEdit}
+           
             style={{
               color: "black",
               "&:hover": {

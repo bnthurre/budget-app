@@ -13,7 +13,7 @@ router.get('/get-accounts', getAccounts);
 router.get('/get-account/:id', getAccountById);
 
 // PUT request to update an account by ID
-router.put('/accounts/:id', [
+router.put('/update-ccounts/:id', [
   // Add validation middleware here if needed
 ], updateAccount);
 

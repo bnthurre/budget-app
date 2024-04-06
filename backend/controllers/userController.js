@@ -3,6 +3,21 @@ const User = require('../models/users');
 // Controller to create a new user
 exports.createUser = async (req, res) => {
   try {
+    const { username, email } = req.body;
+
+    // Check if username already exists
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    // Check if email already exists
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // If username and email are unique, create the user
     const newUser = new User(req.body);
     await newUser.save();
     res.status(201).json(newUser);
@@ -10,7 +25,6 @@ exports.createUser = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 // Controller to get all users
 exports.getAllUsers = async (req, res) => {
   try {
