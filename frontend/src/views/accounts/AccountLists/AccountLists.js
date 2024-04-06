@@ -155,7 +155,7 @@ const Tables = () => {
                     <CTableDataCell>{account.account_type}</CTableDataCell>
                     <CTableDataCell>{account.description}</CTableDataCell>
                     <CTableDataCell>
-                      <Dialoga itemId={account._id} handleDelete={handleDelete} onEdit={handleEdit}/>
+                      <Dialoga type="account" itemId={account._id} handleDelete={handleDelete} onEdit={handleEdit}/>
                     </CTableDataCell>
                   </CTableRow>
                 ))}

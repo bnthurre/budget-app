@@ -81,6 +81,9 @@ const Tables = () => {
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
   );
+  const handleEdit = (accountId) => {
+    history.push(`/budget/budgetAllocationForm?edit=${accountId}`);
+  };
 
   return (
     <CRow>
@@ -152,7 +155,8 @@ const Tables = () => {
                     </CTableDataCell>
                     <CTableDataCell>{allocation.description}</CTableDataCell>
                     <CTableDataCell>
-                    <Dialoga itemId={allocation._id} handleDelete={handleDelete}/>
+                    {/* <Dialoga itemId={allocation._id} handleDelete={handleDelete}/> */}
+                    <Dialoga type="allocation" itemId={allocation._id} handleDelete={handleDelete} onEdit={handleEdit}/>
                     </CTableDataCell>
                   </CTableRow>
                 ))}

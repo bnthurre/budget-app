@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -17,8 +17,6 @@ import {
   CPaginationItem,
   CTableDataCell
 } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilDelete } from '@coreui/icons';
 import Dialoga from '../../Dialog';
 
 const Tables = () => {
@@ -87,6 +85,19 @@ const Tables = () => {
   const pageCount = Math.ceil(categories.length / PAGE_SIZE);
 
   const paginatedCategories = categories.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  // const handleEdit = (categoryId) => {
+  //   history.push(`/accounts/categoryForm?edit=${categoryId}`);
+  // };
+
+
+const handleEdit = (categoryId) => {
+  const navigate = useNavigate(); // Get the navigate function
+  const categoryToEdit = categories.find(category => category._id === categoryId);
+  if (categoryToEdit) {
+    navigate(`/accounts/categoryForm?edit=${categoryId}`, { state: { category: categoryToEdit } });
+  }
+};
+
 
   return (
     <CRow>
@@ -148,7 +159,9 @@ const Tables = () => {
                     <CTableDataCell>{category.name}</CTableDataCell>
                     <CTableDataCell>{category.description}</CTableDataCell>
                     <CTableDataCell>
-                    <Dialoga itemId={category._id} handleDelete={handleDelete}/>
+                    {/* <Dialoga itemId={category._id} handleDelete={handleDelete}/> */}
+                    <Dialoga type="category" itemId={category._id} handleDelete={handleDelete} onEdit={handleEdit}/>
+
                     </CTableDataCell>
                   </CTableRow>
                 ))}

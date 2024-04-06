@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -17,6 +17,8 @@ import {
 } from '@coreui/react'
 
 const BudgetAllocation = () => {
+  const location = useLocation()
+  const { allocation } = location.state || {}
   const [formData, setFormData] = useState({
     category: '',
     account_id: '',
@@ -31,6 +33,18 @@ const BudgetAllocation = () => {
   const [accounts, setAccounts] = useState([])
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (allocation) {
+      setFormData({
+        category: allocation.category || '',
+        account_id: allocation.account_id || '',
+        budget_amount: allocation.budget_amount || '',
+        year: allocation.year || '',
+        budget_date: allocation.budget_date || '',
+        description: allocation.description || '',
+      })
+    }
+  }, [allocation])
   useEffect(() => {
     const fetchCategoriesAndAccounts = async () => {
       try {
@@ -56,52 +70,53 @@ const BudgetAllocation = () => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    const validationErrors = {}
-
+    e.preventDefault();
+  
+    const validationErrors = {};
+  
     if (!formData.category) {
-      validationErrors.category = 'Category is required'
+      validationErrors.category = 'Category is required';
     }
     if (!formData.account_id) {
-      validationErrors.account_id = 'Account number is required'
+      validationErrors.account_id = 'Account number is required';
     }
     if (!formData.budget_amount) {
-      validationErrors.budget_amount = 'Budget amount is required'
+      validationErrors.budget_amount = 'Budget amount is required';
     }
     if (!formData.year) {
-      validationErrors.year = 'Year is required'
+      validationErrors.year = 'Year is required';
     }
-
+  
     // Set error messages for specific fields
-    setError(validationErrors)
-
+    setError(validationErrors);
+  
     // Check if any validation errors exist
-    if (Object.keys(validationErrors).length > 0) {
-      return
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        if (allocation) {
+          // If in edit mode
+          await axios.put(`http://localhost:7001/update-budget-allocation/${allocation._id}`, formData);
+        } else {
+          // If in create mode
+          await axios.post('http://localhost:7001/create-budget-allocation', formData);
+        }
+        setFormData({
+          category: '',
+          account_id: '',
+          budget_amount: '',
+          year: '',
+          budget_date: '',
+          description: '',
+        });
+        setError('');
+        navigate('/budget/budgetAllocationList');
+      } catch (error) {
+        console.error('Error:', error);
+        setError('An error occurred while saving the allocation.');
+      }
     }
-
-    try {
-      const response = await axios.post('http://localhost:7001/create-budget-allocation', formData)
-      console.log('BudgetAllocation created:', response.data)
-      // Reset form fields after successful submission
-      setFormData({
-        category: '',
-        account_id: '',
-        budget_amount: '',
-        year: '',
-        budget_date: '',
-        description: '',
-      })
-      // Clear all errors
-      setError({})
-      navigate('/budget/BudgetAllocationList')
-    } catch (error) {
-      console.error('Error creating BudgetAllocation:', error)
-      setError({ general: 'Error creating BudgetAllocation' })
-    }
-  }
-
+  };
+  
   const years = Array.from({ length: 10 }, (_, index) => new Date().getFullYear() - index)
 
   return (
@@ -111,8 +126,8 @@ const BudgetAllocation = () => {
           <CCard className="mx-4">
             <CCardBody className="p-4">
               <CForm onSubmit={handleSubmit}>
-                <h1>Create Budget Allocation</h1>
-                <p className="text-body-secondary">Create your Budget Allocation</p>
+                <h1>{allocation ? 'Edit Account' : 'Create Account'}</h1>
+                <p className="text-body-secondary">Fill in the details</p>
                 {error.general && <div className="text-danger mb-3">{error.general}</div>}
                 {error.category && <div className="text-danger mb-3">{error.category}</div>}
                 <CInputGroup className="mb-3">
@@ -195,7 +210,7 @@ const BudgetAllocation = () => {
                 </CInputGroup>
                 <div className="d-grid">
                   <CButton type="submit" color="primary">
-                    Create BudgetAllocation
+                    {allocation ? 'Save allocation' : 'Create Allocation'}
                   </CButton>
                 </div>
               </CForm>
@@ -208,4 +223,3 @@ const BudgetAllocation = () => {
 }
 
 export default BudgetAllocation
-

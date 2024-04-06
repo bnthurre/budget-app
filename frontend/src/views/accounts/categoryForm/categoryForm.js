@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   CButton,
@@ -21,11 +21,19 @@ const Category = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const { category } = location.state || {};
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  useEffect(() => {
+    if (category) {
+      setFormData({
+        name: category.name || '',
+        description: category.description || '',
+      });
+    }
+  }, [category]);
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -36,8 +44,13 @@ const Category = () => {
     }
   
     try {
-      const response = await axios.post('http://localhost:7001/create-category', formData);
-      console.log('Category created:', response.data);
+      if (category) {
+        // If in edit mode
+        await axios.put(`http://localhost:7001/update-category/${category._id}`, formData);
+      } else {
+        // If in create mode
+        await axios.post('http://localhost:7001/create-category', formData);
+      }
       // Reset form fields after successful submission
       setFormData({
         name: '',
@@ -54,7 +67,6 @@ const Category = () => {
       }
     }
   };
-  
 
   return (
     <CContainer>
@@ -63,8 +75,8 @@ const Category = () => {
           <CCard className="mx-4">
             <CCardBody className="p-4">
               <CForm onSubmit={handleSubmit}>
-                <h1>Create Category</h1>
-                <p className="text-body-secondary">Create category</p>
+              <h1>{category ? 'Edit Account' : 'Create Account'}</h1>
+                <p className="text-body-secondary">Fill in the details</p>
                 {error && <div className="text-danger mb-3">{error}</div>}
                 <CInputGroup className="mb-3">
                   <CFormInput
@@ -85,8 +97,8 @@ const Category = () => {
                   />
                 </CInputGroup>
                 <div className="d-grid">
-                  <CButton type="submit" color="primary">
-                    Create Category
+                <CButton type="submit" color="primary">
+                    {category ? 'Save Category' : 'Create Category'}
                   </CButton>
                 </div>
               </CForm>
