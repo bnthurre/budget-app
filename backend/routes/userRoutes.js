@@ -9,11 +9,10 @@ router.post('/create-user', userController.createUser);
 router.get('/get-all-users', userController.getAllUsers);
 
 // Get a single user by ID
-router.get('/get-userById:id', userController.getUserById);
+router.get('/get-userById/:id', userController.getUserById);
 
 // Update a user by ID
-router.put('/update-user:id', userController.updateUser);
-
+router.put('/update-user/:id', userController.updateUser);
 // Delete a user by ID
 router.delete('/delete-user/:id', userController.deleteUser);
 

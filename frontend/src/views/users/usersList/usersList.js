@@ -79,7 +79,9 @@ const Tables = () => {
   const pageCount = Math.ceil(users.length / PAGE_SIZE);
 
   const paginatedUsers = users.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-
+  const handleEdit = (userId) => {
+    history.push(`/users/userForm?edit=${userId}`);
+  };
   return (
     <CRow>
       <CCol xs={12}>
@@ -152,7 +154,8 @@ const Tables = () => {
                     <CTableDataCell>{user.stateRegion}</CTableDataCell>
                     <CTableDataCell>{user.role}</CTableDataCell>
                     <CTableDataCell>
-                    <Dialoga itemId={user._id} handleDelete={handleDelete}/>  
+                    {/* <Dialoga itemId={user._id} handleDelete={handleDelete}/>   */}
+                    <Dialoga type="user" itemId={user._id} handleDelete={handleDelete} onEdit={handleEdit}/>
                     </CTableDataCell>
                   </CTableRow>
                 ))}

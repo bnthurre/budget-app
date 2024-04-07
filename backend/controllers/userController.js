@@ -37,8 +37,9 @@ exports.getAllUsers = async (req, res) => {
 
 // Controller to get a single user by ID
 exports.getUserById = async (req, res) => {
+  const id = req.params.id;
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -50,8 +51,9 @@ exports.getUserById = async (req, res) => {
 
 // Controller to update a user by ID
 exports.updateUser = async (req, res) => {
+  const id = req.params.id;
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const user = await User.findByIdAndUpdate(id, req.body, { new: true });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -60,6 +62,7 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Controller to delete a user by ID
 exports.deleteUser = async (req, res) => {

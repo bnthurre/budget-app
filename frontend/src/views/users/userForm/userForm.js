@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {
   CButton,
@@ -15,6 +15,8 @@ import {
 } from '@coreui/react'
 
 const User = () => {
+  const location = useLocation()
+  const { user } = location.state || {}
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
@@ -29,46 +31,64 @@ const User = () => {
   const [errors, setErrors] = useState({})
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || '',
+        username: user.username || '',
+        email: user.email || '',
+        stateRegion: user.stateRegion || '',
+        address: user.address || '',
+        city: user.city || '',
+        role: user.role || '',
+        company: user.company || '',
+      })
+    }
+  }, [user])
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+    e.preventDefault()
+
     // Validate form fields
-    const validationErrors = {};
+    const validationErrors = {}
     if (!formData.fullName.trim()) {
-      validationErrors.fullName = 'Full Name is required';
+      validationErrors.fullName = 'Full Name is required'
     }
     if (!formData.username.trim()) {
-      validationErrors.username = 'Username is required';
+      validationErrors.username = 'Username is required'
     }
     if (!formData.email.trim()) {
-      validationErrors.email = 'Email is required';
+      validationErrors.email = 'Email is required'
     }
     if (!formData.company.trim()) {
-      validationErrors.company = 'Company is required';
+      validationErrors.company = 'Company is required'
     }
     if (!formData.address.trim()) {
-      validationErrors.address = 'Address is required';
+      validationErrors.address = 'Address is required'
     }
     if (!formData.city.trim()) {
-      validationErrors.city = 'City is required';
+      validationErrors.city = 'City is required'
     }
     if (!formData.stateRegion.trim()) {
-      validationErrors.stateRegion = 'State is required';
+      validationErrors.stateRegion = 'State is required'
     }
     if (!formData.role.trim()) {
-      validationErrors.role = 'Role is required';
+      validationErrors.role = 'Role is required'
     }
-    setErrors(validationErrors);
-  
-    // Check if there are any validation errors
+    setErrors(validationErrors)
+
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post('http://localhost:7001/create-user', formData);
-        console.log('User created:', response.data);
+        if (user) {
+          // If in edit mode
+          await axios.put(`http://localhost:7001/update-user/${user._id}`, formData)
+        } else {
+          // If in create mode
+          await axios.post('http://localhost:7001/create-user', formData)
+        }
         setFormData({
           fullName: '',
           username: '',
@@ -78,20 +98,19 @@ const User = () => {
           city: '',
           role: '',
           company: '',
-        });
-        setErrors('');
-        navigate('/users/usersList');
+        })
+        setErrors('')
+        navigate('/users/usersList')
       } catch (error) {
-        console.error('Error creating User:', error);
+        console.error('Error creating User:', error)
         if (error.response && error.response.status === 409) {
-          setErrors('Username or Email already exists');
+          setErrors('Username or Email already exists')
         } else {
-          setErrors('Failed to create user');
+          setErrors('Failed to create user')
         }
       }
     }
-  };
-  
+  }
   return (
     <CContainer>
       <CRow className="justify-content-center">
@@ -99,8 +118,8 @@ const User = () => {
           <CCard className="mx-4">
             <CCardBody className="p-4">
               <CForm onSubmit={handleSubmit}>
-                <h1>Create User</h1>
-                <p className="text-body-secondary">Create your User</p>
+                <h1>{user ? 'Edit User' : 'Create User'}</h1>
+                <p className="text-body-secondary">Fill in the details</p>
                 {errors.fullName && <div className="text-danger">{errors.fullName}</div>}
                 <CInputGroup className="mb-3">
                   <CFormInput
@@ -191,7 +210,7 @@ const User = () => {
                 </CInputGroup>
                 <div className="d-grid">
                   <CButton type="submit" color="primary">
-                    Create User
+                    {user ? 'Save User' : 'Create User'}
                   </CButton>
                 </div>
               </CForm>
@@ -204,176 +223,3 @@ const User = () => {
 }
 
 export default User
-
-// import React, { useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
-// import axios from 'axios'
-// import {
-//   CButton,
-//   CCard,
-//   CCardBody,
-//   CCol,
-//   CContainer,
-//   CForm,
-//   CFormInput,
-//   CInputGroup,
-//   CRow,
-//   CFormSelect,
-// } from '@coreui/react'
-// const User = () => {
-//   const [formData, setFormData] = useState({
-//     fullName: '',
-//     username: '',
-//     email: '',
-//     stateRegion: '',
-//     address:'',
-//     city: '',
-//     role: '',
-//     company: '',
-//   })
-
-//   const [error, setError] = useState('')
-//   const [errors, setErrors] = useState({})
-//   const navigate = useNavigate()
-
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value })
-//   }
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault()
-//     // Validate form fields
-
-//       try {
-//         const response = await axios.post('http://localhost:7001/create-user', formData)
-//         console.log('User created:', response.data)
-//         setFormData({
-//           fullName:'',
-//           username: '',
-//           email: '',
-//           stateRegion: '',
-//           address:'',
-//           city: '',
-//           role: '',
-//           company: '',
-//         })
-//         setError('')
-//         navigate('/users/usersList')
-//       } catch (error) {
-//         console.error('Error creating User:', error)
-//       }
-
-//   }
-//   return (
-//     <CContainer>
-//       <CRow className="justify-content-center">
-//         <CCol md={9} lg={7} xl={8}>
-//           <CCard className="mx-4">
-//             <CCardBody className="p-4">
-//               <CForm onSubmit={handleSubmit}>
-//                 <h1>Create User</h1>
-//                 <p className="text-body-secondary">Create your User</p>
-//                 {errors.account_number && (
-//                   <div className="text-danger mb-3">{errors.account_number}</div>
-//                 )}
-//                 <CInputGroup className="mb-3">
-//                   <CFormInput
-//                     name="fullName"
-//                     value={formData.fullName}
-//                     onChange={handleChange}
-//                     placeholder="Full Name"
-//                     autoComplete="Full Name"
-//                   />
-//                 </CInputGroup>
-//                 {errors.account_name && (
-//                   <div className="text-danger mb-3">{errors.account_name}</div>
-//                 )}
-//                 <CInputGroup className="mb-3">
-//                   <CFormInput
-//                     name="email"
-//                     value={formData.email}
-//                     onChange={handleChange}
-//                     placeholder="Email"
-//                     autoComplete="email"
-//                   />
-//                 </CInputGroup>
-//                 {errors.account_type && (
-//                   <div className="text-danger mb-3">{errors.account_type}</div>
-//                 )}
-//                 <CInputGroup className="mb-3">
-//                   <CFormInput
-//                     name="username"
-//                     value={formData.username}
-//                     onChange={handleChange}
-//                     type="text"
-//                     placeholder="Username"
-//                     autoComplete="username"
-//                   />
-//                 </CInputGroup>
-//                 <CInputGroup className="mb-4">
-//                   <CFormInput
-//                     name="stateRegion"
-//                     value={formData.stateRegion}
-//                     onChange={handleChange}
-//                     type="text"
-//                     placeholder="State/Region"
-//                     autoComplete="state region"
-//                   />
-//                 </CInputGroup>
-//                 <CInputGroup className="mb-4">
-//                   <CFormInput
-//                     name="city"
-//                     value={formData.city}
-//                     onChange={handleChange}
-//                     type="text"
-//                     placeholder="City"
-//                     autoComplete="city"
-//                   />
-//                 </CInputGroup>
-//                 <CInputGroup className="mb-4">
-//                   <CFormInput
-//                     name="company"
-//                     value={formData.company}
-//                     onChange={handleChange}
-//                     type="text"
-//                     placeholder="Company"
-//                     autoComplete="Company"
-//                   />
-//                 </CInputGroup>
-//                 <CInputGroup className="mb-4">
-//                   <CFormInput
-//                     name="address"
-//                     value={formData.address}
-//                     onChange={handleChange}
-//                     type="text"
-//                     placeholder="Address"
-//                     autoComplete="Address"
-//                   />
-//                 </CInputGroup>
-//                 <CInputGroup className="mb-4">
-//                   <CFormSelect
-//                     name="role"
-//                     value={formData.role}
-//                     onChange={handleChange}
-//                     aria-label="Role"
-//                   >
-//                     <option value="">Select Role</option>
-//                     <option value="super admin">Super Admin</option>
-//                     <option value="admin">Admin</option>
-//                   </CFormSelect>
-//                 </CInputGroup>
-//                 <div className="d-grid">
-//                   <CButton type="submit" color="primary">
-//                     Create User
-//                   </CButton>
-//                 </div>
-//               </CForm>
-//             </CCardBody>
-//           </CCard>
-//         </CCol>
-//       </CRow>
-//     </CContainer>
-//   )
-// }
-
-// export default User

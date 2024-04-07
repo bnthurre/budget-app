@@ -51,6 +51,12 @@ export default function Dialoga(props) {
       else if (props.type === "allocation") {
         response = await axios.get(`http://localhost:7001/get-budgetallocationById/${props.itemId}`);
       }
+      else if (props.type === "payment") {
+        response = await axios.get(`http://localhost:7001/get-budgetPaymentById/${props.itemId}`);
+      }
+      else if (props.type === "user") {
+        response = await axios.get(`http://localhost:7001/get-userById/${props.itemId}`);
+      }
 
       // Handle response differently based on type
       const data = response.data;
@@ -61,6 +67,12 @@ export default function Dialoga(props) {
       }
       else if (props.type === "allocation") {
         navigate(`/budget/budgetAllocationForm?edit=${props.itemId}`, { state: { allocation: data } });
+      }
+      else if (props.type === "payment") {
+        navigate(`/budget/budgetPaymentForm?edit=${props.itemId}`, { state: { payment: data } });
+      }
+      else if (props.type === "user") {
+        navigate(`/users/userForm?edit=${props.itemId}`, { state: { user: data } });
       }
     } catch (error) {
       console.error('Error fetching data:', error);
