@@ -16,11 +16,11 @@ import {
   CTableRow,
   CPaginationItem,
   CTableDataCell,
-  CPopover,
 } from '@coreui/react'
 import Dialoga from '../../Dialog'
 import CIcon from '@coreui/icons-react';
 import {cilWindowMaximize } from '@coreui/icons';
+
 const PAGE_SIZE = 5 // Number of items per page
 
 const Tables = () => {
@@ -28,7 +28,9 @@ const Tables = () => {
   const [selectedRows, setSelectedRows] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  
+
+
+
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
@@ -43,6 +45,7 @@ const Tables = () => {
 
     fetchAccounts()
   }, [currentPage])
+
 
   useEffect(() => {
     if (selectedRows.length === accounts.length) {
@@ -62,11 +65,13 @@ const Tables = () => {
   }
 
   const toggleSelectAll = () => {
-    setSelectAllChecked(!selectAllChecked)
-    if (!selectAllChecked) {
-      setSelectedRows(accounts.map((account) => account._id))
-    } else {
-      setSelectedRows([])
+    if (accounts.length > 0) {
+      setSelectAllChecked(!selectAllChecked)
+      if (!selectAllChecked) {
+        setSelectedRows(accounts.map((account) => account._id))
+      } else {
+        setSelectedRows([])
+      }
     }
   }
 
@@ -74,7 +79,6 @@ const Tables = () => {
     try {
       await axios.delete(`http://localhost:7001/delete-account/${accountId}`)
       setAccounts(accounts.filter((account) => account._id !== accountId))
-      setShowPopup(false) // Close the pop-up after deletion
     } catch (error) {
       console.error('Error deleting account:', error)
     }
@@ -128,7 +132,12 @@ const Tables = () => {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell>
-                    <input type="checkbox" checked={selectAllChecked} onChange={toggleSelectAll} />
+                    <input
+                      type="checkbox"
+                      checked={selectAllChecked && accounts.length > 0}
+                      onChange={toggleSelectAll}
+                      disabled={accounts.length === 0}
+                    />
                   </CTableHeaderCell>
                   <CTableHeaderCell scope="col">Account Number</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Account Name</CTableHeaderCell>
@@ -145,7 +154,6 @@ const Tables = () => {
                       style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
                     >
                       <CIcon icon={cilWindowMaximize} size="xxl"/>
-                    
                       <div>  No item found</div>
                     </CTableDataCell>
                   </CTableRow>
@@ -207,3 +215,4 @@ const Tables = () => {
 }
 
 export default Tables
+
