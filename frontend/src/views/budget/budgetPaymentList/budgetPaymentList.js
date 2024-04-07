@@ -125,7 +125,12 @@ const Tables = () => {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell>
-                    <input type="checkbox" checked={selectAllChecked} onChange={toggleSelectAll} />
+                  <input
+                      type="checkbox"
+                      checked={selectAllChecked && payments.length > 0}
+                      onChange={toggleSelectAll}
+                      disabled={payments.length === 0}
+                    />
                   </CTableHeaderCell>
                   <CTableHeaderCell>Category</CTableHeaderCell>
                   <CTableHeaderCell>Account Number</CTableHeaderCell>
