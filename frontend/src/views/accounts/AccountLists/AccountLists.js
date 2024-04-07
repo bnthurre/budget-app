@@ -16,11 +16,11 @@ import {
   CTableRow,
   CPaginationItem,
   CTableDataCell,
-  CPopover
-
+  CPopover,
 } from '@coreui/react'
 import Dialoga from '../../Dialog'
-
+import CIcon from '@coreui/icons-react';
+import {cilWindowMaximize } from '@coreui/icons';
 const PAGE_SIZE = 5 // Number of items per page
 
 const Tables = () => {
@@ -28,9 +28,7 @@ const Tables = () => {
   const [selectedRows, setSelectedRows] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [showPopup, setShowPopup] = useState(false)
-  const [selectedAccountId, setSelectedAccountId] = useState(null)
-
+  
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
@@ -87,9 +85,8 @@ const Tables = () => {
   const paginatedAccounts = accounts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   const handleEdit = (accountId) => {
-    history.push(`/accounts/accountform?edit=${accountId}`);
-  };
-  
+    history.push(`/accounts/accountform?edit=${accountId}`)
+  }
 
   return (
     <CRow>
@@ -141,24 +138,42 @@ const Tables = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {paginatedAccounts.map((account) => (
-                  <CTableRow key={account._id} style={{ fontWeight: 'normal' }}>
-                    <CTableHeaderCell>
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(account._id)}
-                        onChange={() => toggleRowSelection(account._id)}
-                      />
-                    </CTableHeaderCell>
-                    <CTableDataCell>{account.account_number}</CTableDataCell>
-                    <CTableDataCell>{account.account_name}</CTableDataCell>
-                    <CTableDataCell>{account.account_type}</CTableDataCell>
-                    <CTableDataCell>{account.description}</CTableDataCell>
-                    <CTableDataCell>
-                      <Dialoga type="account" itemId={account._id} handleDelete={handleDelete} onEdit={handleEdit}/>
+                {accounts.length === 0 ? (
+                  <CTableRow>
+                    <CTableDataCell
+                      colSpan="6"
+                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                    >
+                      <CIcon icon={cilWindowMaximize} size="xxl"/>
+                    
+                      <div>  No item found</div>
                     </CTableDataCell>
                   </CTableRow>
-                ))}
+                ) : (
+                  paginatedAccounts.map((account) => (
+                    <CTableRow key={account._id} style={{ fontWeight: 'normal' }}>
+                      <CTableHeaderCell>
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(account._id)}
+                          onChange={() => toggleRowSelection(account._id)}
+                        />
+                      </CTableHeaderCell>
+                      <CTableDataCell>{account.account_number}</CTableDataCell>
+                      <CTableDataCell>{account.account_name}</CTableDataCell>
+                      <CTableDataCell>{account.account_type}</CTableDataCell>
+                      <CTableDataCell>{account.description}</CTableDataCell>
+                      <CTableDataCell>
+                        <Dialoga
+                          type="account"
+                          itemId={account._id}
+                          handleDelete={handleDelete}
+                          onEdit={handleEdit}
+                        />
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))
+                )}
               </CTableBody>
             </CTable>
             <CPagination aria-label="Page navigation example">
@@ -192,5 +207,3 @@ const Tables = () => {
 }
 
 export default Tables
-
-

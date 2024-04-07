@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -16,74 +16,74 @@ import {
   CTableRow,
   CPaginationItem,
   CTableDataCell,
-} from '@coreui/react';
+} from '@coreui/react'
 import CIcon from '@coreui/icons-react';
-import { cilDelete } from '@coreui/icons';
-import Dialoga from '../../Dialog';
+import {cilWindowMaximize } from '@coreui/icons';
+import Dialoga from '../../Dialog'
 
 const Tables = () => {
-  const [allocations, setAllocations] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [allocations, setAllocations] = useState([])
+  const [selectedRows, setSelectedRows] = useState([])
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const PAGE_SIZE = 5; // Number of items per page
+  const PAGE_SIZE = 5 // Number of items per page
 
   useEffect(() => {
     const fetchAllocations = async () => {
       try {
         const response = await axios.post(
           `http://localhost:7001/get-budget-allocation?page=${currentPage}&size=${PAGE_SIZE}`,
-        );
-        setAllocations(response.data);
+        )
+        setAllocations(response.data)
       } catch (error) {
-        console.error('Error fetching allocations:', error);
+        console.error('Error fetching allocations:', error)
       }
-    };
+    }
 
-    fetchAllocations();
-  }, [currentPage]);
+    fetchAllocations()
+  }, [currentPage])
 
   useEffect(() => {
-    setSelectAllChecked(selectedRows.length === allocations.length);
-  }, [selectedRows, allocations]);
+    setSelectAllChecked(selectedRows.length === allocations.length)
+  }, [selectedRows, allocations])
 
   const toggleRowSelection = (allocationId) => {
     const updatedSelectedRows = selectedRows.includes(allocationId)
       ? selectedRows.filter((id) => id !== allocationId)
-      : [...selectedRows, allocationId];
-    setSelectedRows(updatedSelectedRows);
-  };
+      : [...selectedRows, allocationId]
+    setSelectedRows(updatedSelectedRows)
+  }
 
   const toggleSelectAll = () => {
     if (selectAllChecked) {
-      setSelectedRows([]);
+      setSelectedRows([])
     } else {
-      setSelectedRows(allocations.map((allocation) => allocation._id));
+      setSelectedRows(allocations.map((allocation) => allocation._id))
     }
-    setSelectAllChecked(!selectAllChecked);
-  };
+    setSelectAllChecked(!selectAllChecked)
+  }
 
   const handleDelete = async (allocationId) => {
     try {
-      await axios.delete(`http://localhost:7001/delete-budget-allocation/${allocationId}`);
-      setAllocations(allocations.filter((allocation) => allocation._id !== allocationId));
-      setSelectedRows(selectedRows.filter((id) => id !== allocationId));
-      setSelectAllChecked(false); // Uncheck "Select All" when deleting an allocation
+      await axios.delete(`http://localhost:7001/delete-budget-allocation/${allocationId}`)
+      setAllocations(allocations.filter((allocation) => allocation._id !== allocationId))
+      setSelectedRows(selectedRows.filter((id) => id !== allocationId))
+      setSelectAllChecked(false) // Uncheck "Select All" when deleting an allocation
     } catch (error) {
-      console.error('Error deleting allocations:', error);
+      console.error('Error deleting allocations:', error)
     }
-  };
+  }
 
-  const pageCount = Math.ceil(allocations.length / PAGE_SIZE);
+  const pageCount = Math.ceil(allocations.length / PAGE_SIZE)
 
   const paginatedAllocations = allocations.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
-  );
+  )
   const handleEdit = (accountId) => {
-    history.push(`/budget/budgetAllocationForm?edit=${accountId}`);
-  };
+    history.push(`/budget/budgetAllocationForm?edit=${accountId}`)
+  }
 
   return (
     <CRow>
@@ -137,29 +137,47 @@ const Tables = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {paginatedAllocations.map((allocation) => (
-                  <CTableRow key={allocation._id}>
-                    <CTableHeaderCell>
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(allocation._id)}
-                        onChange={() => toggleRowSelection(allocation._id)}
-                      />
-                    </CTableHeaderCell>
-                    <CTableDataCell>{allocation.categories.name}</CTableDataCell>
-                    <CTableDataCell>{allocation.accounts.account_number}</CTableDataCell>
-                    <CTableDataCell>{allocation.budget_amount}</CTableDataCell>
-                    <CTableDataCell>{allocation.year}</CTableDataCell>
-                    <CTableDataCell>
-                      {new Date(allocation.budget_date).toLocaleDateString()}
-                    </CTableDataCell>
-                    <CTableDataCell>{allocation.description}</CTableDataCell>
-                    <CTableDataCell>
-                    {/* <Dialoga itemId={allocation._id} handleDelete={handleDelete}/> */}
-                    <Dialoga type="allocation" itemId={allocation._id} handleDelete={handleDelete} onEdit={handleEdit}/>
+                {allocations.length === 0 ? (
+                  <CTableRow>
+                    <CTableDataCell
+                      colSpan="6"
+                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                    >
+                      <CIcon icon={cilWindowMaximize} size="xxl" />
+
+                      <div> No item found</div>
                     </CTableDataCell>
                   </CTableRow>
-                ))}
+                ) : (
+                  paginatedAllocations.map((allocation) => (
+                    <CTableRow key={allocation._id}>
+                      <CTableHeaderCell>
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(allocation._id)}
+                          onChange={() => toggleRowSelection(allocation._id)}
+                        />
+                      </CTableHeaderCell>
+                      <CTableDataCell>{allocation.categories.name}</CTableDataCell>
+                      <CTableDataCell>{allocation.accounts.account_number}</CTableDataCell>
+                      <CTableDataCell>{allocation.budget_amount}</CTableDataCell>
+                      <CTableDataCell>{allocation.year}</CTableDataCell>
+                      <CTableDataCell>
+                        {new Date(allocation.budget_date).toLocaleDateString()}
+                      </CTableDataCell>
+                      <CTableDataCell>{allocation.description}</CTableDataCell>
+                      <CTableDataCell>
+                        {/* <Dialoga itemId={allocation._id} handleDelete={handleDelete}/> */}
+                        <Dialoga
+                          type="allocation"
+                          itemId={allocation._id}
+                          handleDelete={handleDelete}
+                          onEdit={handleEdit}
+                        />
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))
+                )}
               </CTableBody>
             </CTable>
             <CPagination aria-label="Page navigation example">
@@ -189,10 +207,10 @@ const Tables = () => {
         </CCard>
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Tables;
+export default Tables
 
 // import React, { useState, useEffect } from 'react'
 // import axios from 'axios'

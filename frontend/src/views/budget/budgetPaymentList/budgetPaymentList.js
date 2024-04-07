@@ -18,7 +18,7 @@ import {
   CTableDataCell
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilDelete } from '@coreui/icons';
+import {cilWindowMaximize } from '@coreui/icons';
 import Dialoga from '../../Dialog';
 
 const Tables = () => {
@@ -137,7 +137,19 @@ const Tables = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {paginatedPayments.map((payment) => (
+              {payments.length === 0 ? (
+                  <CTableRow>
+                    <CTableDataCell
+                      colSpan="6"
+                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                    >
+                      <CIcon icon={cilWindowMaximize} size="xxl"/>
+                    
+                      <div>  No item found</div>
+                    </CTableDataCell>
+                  </CTableRow>
+                ):(
+                paginatedPayments.map((payment) => (
                   <CTableRow key={payment._id}>
                     <CTableHeaderCell>
                       <input
@@ -156,7 +168,8 @@ const Tables = () => {
                     <Dialoga itemId={payment._id} handleDelete={handleDelete}/>
                     </CTableDataCell>
                   </CTableRow>
-                ))}
+                )))
+}
               </CTableBody>
             </CTable>
             <CPagination aria-label="Page navigation example">

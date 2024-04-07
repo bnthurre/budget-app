@@ -102,20 +102,6 @@ const _nav = [
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
-    component: CNavItem,
-    name: 'Create Budget Payment',
-    to: '/budget/budgetPaymentForm',
-    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
-
-  },
-  {
-    component: CNavItem,
-    name: 'Budget Payments',
-    to: '/budget/budgetPaymentList',
-    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
-
-  },
-  {
     component: CNavGroup,
     name: 'Pages',
     icon: <CIcon icon={cilStar} customClassName="nav-icon" />,

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -15,89 +15,90 @@ import {
   CTableHead,
   CTableRow,
   CPaginationItem,
-  CTableDataCell
-} from '@coreui/react';
-import Dialoga from '../../Dialog';
-
+  CTableDataCell,
+} from '@coreui/react'
+import Dialoga from '../../Dialog'
+import CIcon from '@coreui/icons-react';
+import {cilWindowMaximize } from '@coreui/icons';
 const Tables = () => {
-  const [categories, setCategories] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [categories, setCategories] = useState([])
+  const [selectedRows, setSelectedRows] = useState([])
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const PAGE_SIZE = 5; // Number of items per page
+  const PAGE_SIZE = 5 // Number of items per page
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`http://localhost:7001/get-categories?page=${currentPage}&size=${PAGE_SIZE}`);
-        setCategories(response.data);
+        const response = await axios.get(
+          `http://localhost:7001/get-categories?page=${currentPage}&size=${PAGE_SIZE}`,
+        )
+        setCategories(response.data)
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error)
       }
-    };
+    }
 
-    fetchCategories();
-  }, [currentPage]);
+    fetchCategories()
+  }, [currentPage])
 
   useEffect(() => {
     if (selectedRows.length === categories.length) {
-      setSelectAllChecked(true);
+      setSelectAllChecked(true)
     } else {
-      setSelectAllChecked(false);
+      setSelectAllChecked(false)
     }
-  }, [selectedRows, categories]);
+  }, [selectedRows, categories])
 
   const toggleRowSelection = (categoryId) => {
-    const updatedSelectedRows = [...selectedRows];
-    const selectedIndex = updatedSelectedRows.indexOf(categoryId);
+    const updatedSelectedRows = [...selectedRows]
+    const selectedIndex = updatedSelectedRows.indexOf(categoryId)
     if (selectedIndex === -1) {
-      updatedSelectedRows.push(categoryId);
+      updatedSelectedRows.push(categoryId)
     } else {
-      updatedSelectedRows.splice(selectedIndex, 1);
+      updatedSelectedRows.splice(selectedIndex, 1)
     }
-    setSelectedRows(updatedSelectedRows);
-    setSelectAllChecked(updatedSelectedRows.length === categories.length);
-  };
+    setSelectedRows(updatedSelectedRows)
+    setSelectAllChecked(updatedSelectedRows.length === categories.length)
+  }
 
   const toggleSelectAll = () => {
-    const allCategoryIds = categories.map(category => category._id);
+    const allCategoryIds = categories.map((category) => category._id)
     if (selectAllChecked) {
-      setSelectedRows([]);
-      setSelectAllChecked(false);
+      setSelectedRows([])
+      setSelectAllChecked(false)
     } else {
-      setSelectedRows(allCategoryIds);
-      setSelectAllChecked(true);
+      setSelectedRows(allCategoryIds)
+      setSelectAllChecked(true)
     }
-  };
+  }
 
   const handleDelete = async (categoryId) => {
     try {
-      await axios.delete(`http://localhost:7001/delete-category/${categoryId}`);
-      setCategories(categories.filter((category) => category._id !== categoryId));
-      setSelectedRows(selectedRows.filter(id => id !== categoryId));
-      setSelectAllChecked(selectedRows.length === 1); // If only one row was selected, uncheck "Select All"
+      await axios.delete(`http://localhost:7001/delete-category/${categoryId}`)
+      setCategories(categories.filter((category) => category._id !== categoryId))
+      setSelectedRows(selectedRows.filter((id) => id !== categoryId))
+      setSelectAllChecked(selectedRows.length === 1) // If only one row was selected, uncheck "Select All"
     } catch (error) {
-      console.error('Error deleting category:', error);
+      console.error('Error deleting category:', error)
     }
-  };
-
-  const pageCount = Math.ceil(categories.length / PAGE_SIZE);
-
-  const paginatedCategories = categories.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  // const handleEdit = (categoryId) => {
-  //   history.push(`/accounts/categoryForm?edit=${categoryId}`);
-  // };
-
-
-const handleEdit = (categoryId) => {
-  const navigate = useNavigate(); // Get the navigate function
-  const categoryToEdit = categories.find(category => category._id === categoryId);
-  if (categoryToEdit) {
-    navigate(`/accounts/categoryForm?edit=${categoryId}`, { state: { category: categoryToEdit } });
   }
-};
 
+  const pageCount = Math.ceil(categories.length / PAGE_SIZE)
+
+  const paginatedCategories = categories.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  )
+
+  const handleEdit = (categoryId) => {
+    const navigate = useNavigate() // Get the navigate function
+    const categoryToEdit = categories.find((category) => category._id === categoryId)
+    if (categoryToEdit) {
+      navigate(`/accounts/categoryForm?edit=${categoryId}`, { state: { category: categoryToEdit } })
+    }
+  }
 
   return (
     <CRow>
@@ -147,36 +148,63 @@ const handleEdit = (categoryId) => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {paginatedCategories.map((category) => (
-                  <CTableRow key={category._id}>
-                    <CTableHeaderCell>
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(category._id)}
-                        onChange={() => toggleRowSelection(category._id)}
-                      />
-                    </CTableHeaderCell>
-                    <CTableDataCell>{category.name}</CTableDataCell>
-                    <CTableDataCell>{category.description}</CTableDataCell>
-                    <CTableDataCell>
-                    {/* <Dialoga itemId={category._id} handleDelete={handleDelete}/> */}
-                    <Dialoga type="category" itemId={category._id} handleDelete={handleDelete} onEdit={handleEdit}/>
+                {categories.length === 0 ? (
+                  <CTableRow>
+                    <CTableDataCell
+                      colSpan="6"
+                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                    >
+                      <CIcon icon={cilWindowMaximize} size="xxl" />
 
+                      <div> No item found</div>
                     </CTableDataCell>
                   </CTableRow>
-                ))}
+                ) : (
+                  paginatedCategories.map((category) => (
+                    <CTableRow key={category._id}>
+                      <CTableHeaderCell>
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(category._id)}
+                          onChange={() => toggleRowSelection(category._id)}
+                        />
+                      </CTableHeaderCell>
+                      <CTableDataCell>{category.name}</CTableDataCell>
+                      <CTableDataCell>{category.description}</CTableDataCell>
+                      <CTableDataCell>
+                        {/* <Dialoga itemId={category._id} handleDelete={handleDelete}/> */}
+                        <Dialoga
+                          type="category"
+                          itemId={category._id}
+                          handleDelete={handleDelete}
+                          onEdit={handleEdit}
+                        />
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))
+                )}
               </CTableBody>
             </CTable>
             <CPagination aria-label="Page navigation example">
-              <CPaginationItem disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+              <CPaginationItem
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
                 Previous
               </CPaginationItem>
               {[...Array(pageCount).keys()].map((index) => (
-                <CPaginationItem key={index} active={index + 1 === currentPage} onClick={() => setCurrentPage(index + 1)}>
+                <CPaginationItem
+                  key={index}
+                  active={index + 1 === currentPage}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
                   {index + 1}
                 </CPaginationItem>
               ))}
-              <CPaginationItem disabled={currentPage === pageCount} onClick={() => setCurrentPage(currentPage + 1)}>
+              <CPaginationItem
+                disabled={currentPage === pageCount}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
                 Next
               </CPaginationItem>
             </CPagination>
@@ -184,8 +212,7 @@ const handleEdit = (categoryId) => {
         </CCard>
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Tables;
-
+export default Tables

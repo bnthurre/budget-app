@@ -18,7 +18,8 @@ import {
   CTableDataCell
 } from '@coreui/react';
 import Dialoga from '../../Dialog';
-
+import CIcon from '@coreui/icons-react';
+import {cilWindowMaximize } from '@coreui/icons';
 
 const PAGE_SIZE = 5; // Number of items per page
 
@@ -136,7 +137,19 @@ const Tables = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {paginatedUsers.map((user) => (
+              {users.length === 0 ? (
+                  <CTableRow>
+                    <CTableDataCell
+                      colSpan="6"
+                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                    >
+                      <CIcon icon={cilWindowMaximize} size="xxl"/>
+                    
+                      <div>  No item found</div>
+                    </CTableDataCell>
+                  </CTableRow>
+                ):(
+                paginatedUsers.map((user) => (
                   <CTableRow key={user._id}  style={{ fontWeight: 'normal' }}>
                     <CTableHeaderCell>
                       <input
@@ -158,7 +171,7 @@ const Tables = () => {
                     <Dialoga type="user" itemId={user._id} handleDelete={handleDelete} onEdit={handleEdit}/>
                     </CTableDataCell>
                   </CTableRow>
-                ))}
+                )))}
               </CTableBody>
             </CTable>
             <CPagination aria-label="Page navigation example">
