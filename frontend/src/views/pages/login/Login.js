@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios'; // Import axios for making HTTP requests
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for programmatic navigation
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios' // Import axios for making HTTP requests
+import { useNavigate } from 'react-router-dom' // Import useNavigate for programmatic navigation
 import {
   CButton,
   CCard,
@@ -14,30 +14,30 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilLockLocked, cilUser } from '@coreui/icons';
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilLockLocked, cilUser } from '@coreui/icons'
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate(); // Hook for programmatic navigation
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate() // Hook for programmatic navigation
 
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:7001/api/auth/login', {
         email: email,
         password: password,
-      });
-      const token = response.data.token;
-      localStorage.setItem('token', token);
+      })
+      const token = response.data.token
+      localStorage.setItem('token', token)
       // Redirect the user to another page upon successful login (dashboard route)
-      navigate('/dashboard');
+      navigate('/dashboard')
     } catch (error) {
-      setError(error.response.data.error);
+      setError(error.response.data.error)
     }
-  };
+  }
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -71,6 +71,11 @@ const Login = () => {
                         autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleLogin()
+                          }
+                        }}
                       />
                     </CInputGroup>
                     {error && <p className="text-danger">{error}</p>}
@@ -107,7 +112,7 @@ const Login = () => {
         </CRow>
       </CContainer>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
