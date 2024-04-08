@@ -63,7 +63,7 @@ export default function Dialoga(props) {
       if (props.type === "account") {
         navigate(`/accounts/accountform?edit=${props.itemId}`, { state: { account: data } });
       } else if (props.type === "category") {
-        navigate(`/accounts/CategoryForm?edit=${props.itemId}`, { state: { category: data } });
+        navigate(`/categories/CategoryForm?edit=${props.itemId}`, { state: { category: data } });
       }
       else if (props.type === "allocation") {
         navigate(`/budget/budgetAllocationForm?edit=${props.itemId}`, { state: { allocation: data } });

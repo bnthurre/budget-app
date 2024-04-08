@@ -96,7 +96,7 @@ const Tables = () => {
     const navigate = useNavigate() // Get the navigate function
     const categoryToEdit = categories.find((category) => category._id === categoryId)
     if (categoryToEdit) {
-      navigate(`/accounts/categoryForm?edit=${categoryId}`, { state: { category: categoryToEdit } })
+      navigate(`/categories/categoryForm?edit=${categoryId}`, { state: { category: categoryToEdit } })
     }
   }
 
@@ -104,7 +104,7 @@ const Tables = () => {
     <CRow>
       <CCol xs={12}>
         <div className="d-flex justify-content-end mb-3">
-          <Link to="/accounts/categoryform">
+          <Link to="/categories/categoryform">
             <CButton color="primary" size="sm">
               Create Category
             </CButton>

@@ -3,8 +3,8 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const AccountForm = React.lazy(() => import('./views/accounts/accountform/accountform'))
 const AccountLists = React.lazy(() => import('./views/accounts/AccountLists/AccountLists'))
-const CategoryForm = React.lazy(() => import('./views/accounts/categoryForm/categoryForm'))
-const CategoryList = React.lazy(() => import('./views/accounts/categoryList/categoryList'))
+const CategoryForm = React.lazy(() => import('./views/categories/categoryForm/categoryForm'))
+const CategoryList = React.lazy(() => import('./views/categories/categoryList/categoryList'))
 
 
 //budget
@@ -17,8 +17,7 @@ const budgetPaymentList = React.lazy(() => import('./views/budget/budgetPaymentL
 //users
 const UserForm = React.lazy(() => import('./views/users/userForm/userForm'))
 const UsersList = React.lazy(() => import('./views/users/usersList/usersList'))
-// const budgetPaymentForm = React.lazy(() => import('./views/budget/budgetPaymentForm/budgetPaymentForm'))
-// const budgetPaymentList = React.lazy(() => import('./views/budget/budgetPaymentList/budgetPaymentList'))
+
 
 
 
@@ -28,8 +27,9 @@ const routes = [
   { path: '/accounts', name: 'Accounts', element: AccountLists, exact: true },
   { path: '/accounts/accountForm', name: 'Create Account', element: AccountForm},
   { path: '/accounts/AccountLists', name: 'AccountLists', element: AccountLists},
-  { path: '/accounts/categoryForm', name: 'Create Category', element: CategoryForm },
-  { path: '/accounts/categoryList', name: 'Category Lists', element: CategoryList},
+  { path: '/categories', name: 'Categories', element: CategoryList, exact: true },
+  { path: '/categories/categoryForm', name: 'Create Category', element: CategoryForm },
+  { path: '/categories/categoryList', name: 'Category Lists', element: CategoryList},
   { path: '/budget', name: 'Budget', element: budgetAllocationList, exact: true },
   { path: '/budget/budgetAllocationForm', name: ' Create BudgetAllocation', element: budgetAllocationForm},
   { path: '/budget/budgetAllocationList', name: 'BudgtAllocation List', element: budgetAllocationList},
@@ -44,3 +44,4 @@ const routes = [
 ]
 
 export default routes
+

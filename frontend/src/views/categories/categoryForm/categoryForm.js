@@ -57,7 +57,7 @@ const Category = () => {
         description: '',
       });
       setError('');
-      navigate('/accounts/categoryList');
+      navigate('/categories/categoryList');
     } catch (error) {
       console.error('Error creating category:', error);
       if (error.response && error.response.status === 409) {

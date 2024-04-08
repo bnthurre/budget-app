@@ -42,16 +42,20 @@ const _nav = [
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
+    component: CNavTitle,
+    name: 'Category',
+  },
+  {
     component: CNavItem,
     name: 'Create Category',
-    to: '/accounts/categoryForm',
+    to: '/categories/categoryForm',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
 
   },
   {
     component: CNavItem,
     name: 'category List',
-    to: '/accounts/categoryList',
+    to: '/categories/categoryList',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
 
   },
