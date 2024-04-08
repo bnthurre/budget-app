@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -16,81 +16,78 @@ import {
   CTableRow,
   CPaginationItem,
   CTableDataCell,
-} from '@coreui/react'
-import Dialoga from '../../Dialog'
+} from '@coreui/react';
+import Dialoga from '../../Dialog';
 import CIcon from '@coreui/icons-react';
-import {cilWindowMaximize } from '@coreui/icons';
+import { cilWindowMaximize } from '@coreui/icons';
 
-const PAGE_SIZE = 5 // Number of items per page
+const PAGE_SIZE = 5; // Number of items per page
 
 const Tables = () => {
-  const [accounts, setAccounts] = useState([])
-  const [selectedRows, setSelectedRows] = useState([])
-  const [selectAllChecked, setSelectAllChecked] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
-
-
+  const [accounts, setAccounts] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:7001/get-accounts?page=${currentPage}&size=${PAGE_SIZE}`,
-        )
-        setAccounts(response.data)
+          `http://localhost:7001/get-accounts?page=${currentPage}&size=${PAGE_SIZE}`
+        );
+        setAccounts(response.data);
       } catch (error) {
-        console.error('Error fetching accounts:', error)
+        console.error('Error fetching accounts:', error);
       }
-    }
+    };
 
-    fetchAccounts()
-  }, [currentPage])
-
+    fetchAccounts();
+  }, [currentPage]);
 
   useEffect(() => {
     if (selectedRows.length === accounts.length) {
-      setSelectAllChecked(true)
+      setSelectAllChecked(true);
     } else {
-      setSelectAllChecked(false)
+      setSelectAllChecked(false);
     }
-  }, [selectedRows, accounts])
+  }, [selectedRows, accounts]);
 
   const toggleRowSelection = (accountId) => {
-    const selectedIndex = selectedRows.indexOf(accountId)
+    const selectedIndex = selectedRows.indexOf(accountId);
     if (selectedIndex === -1) {
-      setSelectedRows([...selectedRows, accountId])
+      setSelectedRows([...selectedRows, accountId]);
     } else {
-      setSelectedRows(selectedRows.filter((id) => id !== accountId))
+      setSelectedRows(selectedRows.filter((id) => id !== accountId));
     }
-  }
+  };
 
   const toggleSelectAll = () => {
     if (accounts.length > 0) {
-      setSelectAllChecked(!selectAllChecked)
+      setSelectAllChecked(!selectAllChecked);
       if (!selectAllChecked) {
-        setSelectedRows(accounts.map((account) => account._id))
+        setSelectedRows(accounts.map((account) => account._id));
       } else {
-        setSelectedRows([])
+        setSelectedRows([]);
       }
     }
-  }
+  };
 
   const handleDelete = async (accountId) => {
     try {
-      await axios.delete(`http://localhost:7001/delete-account/${accountId}`)
-      setAccounts(accounts.filter((account) => account._id !== accountId))
+      await axios.delete(`http://localhost:7001/delete-account/${accountId}`);
+      setAccounts(accounts.filter((account) => account._id !== accountId));
     } catch (error) {
-      console.error('Error deleting account:', error)
+      console.error('Error deleting account:', error);
     }
-  }
+  };
 
-  const pageCount = Math.ceil(accounts.length / PAGE_SIZE)
+  const pageCount = Math.ceil(accounts.length / PAGE_SIZE);
 
-  const paginatedAccounts = accounts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const paginatedAccounts = accounts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const handleEdit = (accountId) => {
-    history.push(`/accounts/accountform?edit=${accountId}`)
-  }
+    history.push(`/accounts/accountform?edit=${accountId}`);
+  };
 
   return (
     <CRow>
@@ -128,62 +125,64 @@ const Tables = () => {
           </CCardHeader>
 
           <CCardBody>
-            <CTable hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell>
-                    <input
-                      type="checkbox"
-                      checked={selectAllChecked && accounts.length > 0}
-                      onChange={toggleSelectAll}
-                      disabled={accounts.length === 0}
-                    />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Account Number</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Account Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Account Type</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                  <CTableHeaderCell></CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {accounts.length === 0 ? (
+            <div className="table-responsive" style={{ overflowX: 'scroll' }}> 
+              <CTable hover>
+                <CTableHead>
                   <CTableRow>
-                    <CTableDataCell
-                      colSpan="6"
-                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
-                    >
-                      <CIcon icon={cilWindowMaximize} size="xxl"/>
-                      <div>  No item found</div>
-                    </CTableDataCell>
+                    <CTableHeaderCell>
+                      <input
+                        type="checkbox"
+                        checked={selectAllChecked && accounts.length > 0}
+                        onChange={toggleSelectAll}
+                        disabled={accounts.length === 0}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Account Number</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Account Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Account Type</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Description</CTableHeaderCell>
+                    <CTableHeaderCell></CTableHeaderCell>
                   </CTableRow>
-                ) : (
-                  paginatedAccounts.map((account) => (
-                    <CTableRow key={account._id} style={{ fontWeight: 'normal' }}>
-                      <CTableHeaderCell>
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.includes(account._id)}
-                          onChange={() => toggleRowSelection(account._id)}
-                        />
-                      </CTableHeaderCell>
-                      <CTableDataCell>{account.account_number}</CTableDataCell>
-                      <CTableDataCell>{account.account_name}</CTableDataCell>
-                      <CTableDataCell>{account.account_type}</CTableDataCell>
-                      <CTableDataCell>{account.description}</CTableDataCell>
-                      <CTableDataCell>
-                        <Dialoga
-                          type="account"
-                          itemId={account._id}
-                          handleDelete={handleDelete}
-                          onEdit={handleEdit}
-                        />
+                </CTableHead>
+                <CTableBody>
+                  {accounts.length === 0 ? (
+                    <CTableRow>
+                      <CTableDataCell
+                        colSpan="6"
+                        style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                      >
+                        <CIcon icon={cilWindowMaximize} size="xxl" />
+                        <div> No item found</div>
                       </CTableDataCell>
                     </CTableRow>
-                  ))
-                )}
-              </CTableBody>
-            </CTable>
+                  ) : (
+                    paginatedAccounts.map((account) => (
+                      <CTableRow key={account._id} style={{ fontWeight: 'normal' }}>
+                        <CTableHeaderCell>
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.includes(account._id)}
+                            onChange={() => toggleRowSelection(account._id)}
+                          />
+                        </CTableHeaderCell>
+                        <CTableDataCell>{account.account_number}</CTableDataCell>
+                        <CTableDataCell>{account.account_name}</CTableDataCell>
+                        <CTableDataCell>{account.account_type}</CTableDataCell>
+                        <CTableDataCell>{account.description}</CTableDataCell>
+                        <CTableDataCell>
+                          <Dialoga
+                            type="account"
+                            itemId={account._id}
+                            handleDelete={handleDelete}
+                            onEdit={handleEdit}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  )}
+                </CTableBody>
+              </CTable>
+            </div>
             <CPagination aria-label="Page navigation example">
               <CPaginationItem
                 disabled={currentPage === 1}
@@ -211,8 +210,9 @@ const Tables = () => {
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default Tables
+export default Tables;
+
 

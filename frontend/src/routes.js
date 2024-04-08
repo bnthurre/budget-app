@@ -23,7 +23,7 @@ const UsersList = React.lazy(() => import('./views/users/usersList/usersList'))
 
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '/dashboard', exact: true, name: 'Home' , element: Dashboard  },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/accounts', name: 'Accounts', element: AccountLists, exact: true },
   { path: '/accounts/accountForm', name: 'Create Account', element: AccountForm},
