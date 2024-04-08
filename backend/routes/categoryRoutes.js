@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createCategory, getAllCategories, getCategoryById, updateCategory, deleteCategory } = require('../controllers/categoryController');
+const { createCategory, getAllCategories, getCategoryById, updateCategory, deleteCategory , deleteCategories} = require('../controllers/categoryController');
 const { body } = require('express-validator');
 
 // POST request to create a new account
@@ -19,5 +19,8 @@ router.put('/update-category/:id', [
 
 // DELETE request to delete an account by ID
 router.delete('/delete-category/:id', deleteCategory);
+
+//delete many
+router.post('/delete-categories/:id',deleteCategories )
 
 module.exports = router;

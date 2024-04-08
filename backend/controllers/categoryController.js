@@ -64,4 +64,16 @@ const categoryController = {
   },
 };
 
+// Delete multiple categories by their IDs
+exports.deleteCategories = async (req, res) => {
+  const {categoeyIds } = req.body; // Array of account IDs to delete
+  try {
+    // Delete multiple accounts using the array of IDs
+    await Account.deleteMany({ _id: { $in: categoeyIds } });
+    res.status(200).json({ message: 'Categories deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = categoryController;

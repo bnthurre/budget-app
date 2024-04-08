@@ -88,3 +88,15 @@ exports.deleteBudgetPayment = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Delete multiple payments by their IDs
+exports.deletePayments = async (req, res) => {
+  const { paymentIds } = req.body; // Array of account IDs to delete
+  try {
+    // Delete multiple accounts using the array of IDs
+    await Account.deleteMany({ _id: { $in: paymentIds } });
+    res.status(200).json({ message: 'Payments deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

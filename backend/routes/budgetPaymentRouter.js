@@ -17,4 +17,7 @@ router.put('/update-budget-payment/:id', budgetPaymentController.updateBudgetPay
 //delete by id
 router.delete('/delete-budget-payment/:id', budgetPaymentController.deleteBudgetPayment)
 
+//delete many
+router.post('/delete-budget-payments/:id', budgetPaymentController.deletePayments)
+
 module.exports = router;

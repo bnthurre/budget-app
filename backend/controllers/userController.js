@@ -80,9 +80,9 @@ exports.deleteUser = async (req, res) => {
 
 // Controller to delete multiple selected users by IDs
 exports.deleteSelectedUsers = async (req, res) => {
-    const { ids } = req.body;
+    const { usersids } = req.body;
     try {
-      const result = await User.deleteMany({ _id: { $in: ids } });
+      const result = await User.deleteMany({ _id: { $in: usersids } });
       res.status(200).json({ message: `${result.deletedCount} users deleted successfully` });
     } catch (error) {
       res.status(500).json({ message: error.message });

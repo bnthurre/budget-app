@@ -17,4 +17,7 @@ router.put('/update-budget-allocation/:id', budgetAllocationController.updateBud
 //delete by id
 router.delete('/delete-budget-allocation/:id', budgetAllocationController.deleteBudgetAllocation)
 
+//delete many
+router.post('/delete-budget-allocations/:id', budgetAllocationController.deleteAllocations)
+
 module.exports = router;
