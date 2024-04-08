@@ -20,6 +20,7 @@ import {
 import Dialoga from '../../Dialog';
 import CIcon from '@coreui/icons-react';
 import { cilWindowMaximize } from '@coreui/icons';
+import DeleteMany from '../../DeleteMany';
 
 const PAGE_SIZE = 5; // Number of items per page
 
@@ -75,9 +76,26 @@ const Tables = () => {
   const handleDelete = async (accountId) => {
     try {
       await axios.delete(`http://localhost:7001/delete-account/${accountId}`);
+      // Remove the deleted account from the accounts state
       setAccounts(accounts.filter((account) => account._id !== accountId));
     } catch (error) {
       console.error('Error deleting account:', error);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    try {
+      // Send a POST request to delete multiple accounts
+      await axios.post('http://localhost:7001/delete-accounts', { accountIds: selectedRows });
+      // After successful deletion, update the accounts state by fetching fresh data
+      const response = await axios.get(
+        `http://localhost:7001/get-accounts?page=${currentPage}&size=${PAGE_SIZE}`
+      );
+      setAccounts(response.data);
+      // Clear selected rows
+      setSelectedRows([]);
+    } catch (error) {
+      console.error('Error deleting accounts:', error);
     }
   };
 
@@ -112,7 +130,7 @@ const Tables = () => {
               <div>
                 <strong>Account</strong> <small>Lists</small>
               </div>
-              {selectedRows.length > 0 && (
+              {selectedRows.length > 0 && selectedRows.length > 1 && (
                 <div className="mb-2">
                   {selectedRows.length === accounts.length ? (
                     <div>All accounts are selected</div>
@@ -121,11 +139,12 @@ const Tables = () => {
                   )}
                 </div>
               )}
+              {selectedRows.length > 1 && <DeleteMany handleDeleteMany={handleDeleteAll} itemId={selectedRows} />}
             </div>
           </CCardHeader>
 
           <CCardBody>
-            <div className="table-responsive" style={{ overflowX: 'scroll' }}> 
+            <div className="table-responsive" style={{ overflowX: 'scroll' }}>
               <CTable hover>
                 <CTableHead>
                   <CTableRow>
@@ -214,5 +233,4 @@ const Tables = () => {
 };
 
 export default Tables;
-
 

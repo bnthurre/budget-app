@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createAccount, getAccounts, getAccountById, updateAccount, deleteAccount } = require('../controllers/accountController');
+const { createAccount, getAccounts, getAccountById, updateAccount, deleteAccount,deleteAccounts } = require('../controllers/accountController');
 const { body } = require('express-validator');
 
 // POST request to create a new account
@@ -19,5 +19,8 @@ router.put('/update-ccounts/:id', [
 
 // DELETE request to delete an account by ID
 router.delete('/delete-account/:id', deleteAccount);
+
+// DELETE request to delete all accounts selected
+router.post('/delete-accounts', deleteAccounts);
 
 module.exports = router;

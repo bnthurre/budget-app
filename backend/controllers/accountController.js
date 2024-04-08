@@ -73,3 +73,15 @@ exports.deleteAccount = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// Delete multiple accounts by their IDs
+exports.deleteAccounts = async (req, res) => {
+  const { accountIds } = req.body; // Array of account IDs to delete
+  try {
+    // Delete multiple accounts using the array of IDs
+    await Account.deleteMany({ _id: { $in: accountIds } });
+    res.status(200).json({ message: 'Accounts deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
