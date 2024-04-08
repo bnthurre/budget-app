@@ -18,8 +18,8 @@ import {
   CTableDataCell,
 } from '@coreui/react'
 import Dialoga from '../../Dialog'
-import CIcon from '@coreui/icons-react';
-import {cilWindowMaximize } from '@coreui/icons';
+import CIcon from '@coreui/icons-react'
+import { cilWindowMaximize } from '@coreui/icons'
 const Tables = () => {
   const [categories, setCategories] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
@@ -96,7 +96,9 @@ const Tables = () => {
     const navigate = useNavigate() // Get the navigate function
     const categoryToEdit = categories.find((category) => category._id === categoryId)
     if (categoryToEdit) {
-      navigate(`/categories/categoryForm?edit=${categoryId}`, { state: { category: categoryToEdit } })
+      navigate(`/categories/categoryForm?edit=${categoryId}`, {
+        state: { category: categoryToEdit },
+      })
     }
   }
 
@@ -136,83 +138,85 @@ const Tables = () => {
           </CCardHeader>
 
           <CCardBody>
-            <CTable hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell>
-                    <input
-                      type="checkbox"
-                      checked={selectAllChecked && categories.length > 0}
-                      onChange={toggleSelectAll}
-                      disabled={categories.length === 0}
-                    />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell>Name</CTableHeaderCell>
-                  <CTableHeaderCell>Description</CTableHeaderCell>
-                  <CTableHeaderCell></CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {categories.length === 0 ? (
+            <div className="table-responsive" style={{ overflowX: 'scroll' }}>
+              <CTable hover>
+                <CTableHead>
                   <CTableRow>
-                    <CTableDataCell
-                      colSpan="6"
-                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
-                    >
-                      <CIcon icon={cilWindowMaximize} size="xxl" />
-
-                      <div> No item found</div>
-                    </CTableDataCell>
+                    <CTableHeaderCell>
+                      <input
+                        type="checkbox"
+                        checked={selectAllChecked && categories.length > 0}
+                        onChange={toggleSelectAll}
+                        disabled={categories.length === 0}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell>Name</CTableHeaderCell>
+                    <CTableHeaderCell>Description</CTableHeaderCell>
+                    <CTableHeaderCell></CTableHeaderCell>
                   </CTableRow>
-                ) : (
-                  paginatedCategories.map((category) => (
-                    <CTableRow key={category._id}>
-                      <CTableHeaderCell>
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.includes(category._id)}
-                          onChange={() => toggleRowSelection(category._id)}
-                        />
-                      </CTableHeaderCell>
-                      <CTableDataCell>{category.name}</CTableDataCell>
-                      <CTableDataCell>{category.description}</CTableDataCell>
-                      <CTableDataCell>
-                        {/* <Dialoga itemId={category._id} handleDelete={handleDelete}/> */}
-                        <Dialoga
-                          type="category"
-                          itemId={category._id}
-                          handleDelete={handleDelete}
-                          onEdit={handleEdit}
-                        />
+                </CTableHead>
+                <CTableBody>
+                  {categories.length === 0 ? (
+                    <CTableRow>
+                      <CTableDataCell
+                        colSpan="6"
+                        style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                      >
+                        <CIcon icon={cilWindowMaximize} size="xxl" />
+
+                        <div> No item found</div>
                       </CTableDataCell>
                     </CTableRow>
-                  ))
-                )}
-              </CTableBody>
-            </CTable>
-            <CPagination aria-label="Page navigation example">
-              <CPaginationItem
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Previous
-              </CPaginationItem>
-              {[...Array(pageCount).keys()].map((index) => (
+                  ) : (
+                    paginatedCategories.map((category) => (
+                      <CTableRow key={category._id}>
+                        <CTableHeaderCell>
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.includes(category._id)}
+                            onChange={() => toggleRowSelection(category._id)}
+                          />
+                        </CTableHeaderCell>
+                        <CTableDataCell>{category.name}</CTableDataCell>
+                        <CTableDataCell>{category.description}</CTableDataCell>
+                        <CTableDataCell>
+                          {/* <Dialoga itemId={category._id} handleDelete={handleDelete}/> */}
+                          <Dialoga
+                            type="category"
+                            itemId={category._id}
+                            handleDelete={handleDelete}
+                            onEdit={handleEdit}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  )}
+                </CTableBody>
+              </CTable>
+              <CPagination aria-label="Page navigation example">
                 <CPaginationItem
-                  key={index}
-                  active={index + 1 === currentPage}
-                  onClick={() => setCurrentPage(index + 1)}
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
                 >
-                  {index + 1}
+                  Previous
                 </CPaginationItem>
-              ))}
-              <CPaginationItem
-                disabled={currentPage === pageCount}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next
-              </CPaginationItem>
-            </CPagination>
+                {[...Array(pageCount).keys()].map((index) => (
+                  <CPaginationItem
+                    key={index}
+                    active={index + 1 === currentPage}
+                    onClick={() => setCurrentPage(index + 1)}
+                  >
+                    {index + 1}
+                  </CPaginationItem>
+                ))}
+                <CPaginationItem
+                  disabled={currentPage === pageCount}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Next
+                </CPaginationItem>
+              </CPagination>
+            </div>
           </CCardBody>
         </CCard>
       </CCol>
