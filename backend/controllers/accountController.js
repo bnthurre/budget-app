@@ -11,10 +11,14 @@ exports.createAccount = async (req, res) => {
 //create account 
   const newAccount = new Account(req.body);
   try {
+    const account_number = await Account.find({account_number : req.body.account_number})
+    if(account_number){
+      return res.status(404).json({message: "account number already exists", status: false})
+    }
     const savedAccount = await newAccount.save();
-    res.status(201).json(savedAccount);
+    res.status(201).json({savedAccount,status: true});
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ message: err.message, statu: false });
   }
 };
 

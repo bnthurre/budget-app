@@ -13,14 +13,12 @@ router.get('/get-categories', getAllCategories);
 router.get('/get-category-by-id/:id', getCategoryById);
 
 // PUT request to update an account by ID
-router.put('/update-category/:id', [
-
-], updateCategory);
+router.put('/update-category/:id', updateCategory);
 
 // DELETE request to delete an account by ID
 router.delete('/delete-category/:id', deleteCategory);
 
 //delete many
-router.post('/delete-categories/:id',deleteCategories )
+router.post('/delete-categories',deleteCategories )
 
 module.exports = router;

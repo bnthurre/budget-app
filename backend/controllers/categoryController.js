@@ -1,4 +1,4 @@
-const Category = require('../models/Category');
+const Category = require("../models/Category");
 
 // Controller functions
 const categoryController = {
@@ -15,7 +15,7 @@ const categoryController = {
     try {
       const category = await Category.findById(req.params.id);
       if (!category) {
-        return res.status(404).json({ message: 'Category not found' });
+        return res.status(404).json({ message: "Category not found" });
       }
       res.json(category);
     } catch (error) {
@@ -28,7 +28,9 @@ const categoryController = {
       const { name, description } = req.body;
       const category = new Category({ name, description });
       await category.save();
-      res.status(201).json({ message: 'Category created successfully', category });
+      res
+        .status(201)
+        .json({ message: "Category created successfully", category });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -43,9 +45,9 @@ const categoryController = {
         { new: true } // Return the updated document
       );
       if (!updatedCategory) {
-        return res.status(404).json({ message: 'Category not found' });
+        return res.status(404).json({ message: "Category not found" });
       }
-      res.json({ message: 'Category updated successfully', updatedCategory });
+      res.json({ message: "Category updated successfully", updatedCategory });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -55,25 +57,27 @@ const categoryController = {
     try {
       const deletedCategory = await Category.findByIdAndDelete(req.params.id);
       if (!deletedCategory) {
-        return res.status(404).json({ message: 'Category not found' });
+        return res.status(404).json({ message: "Category not found" });
       }
-      res.json({ message: 'Category deleted successfully', deletedCategory });
+      res.json({ message: "Category deleted successfully", deletedCategory });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
-};
 
-// Delete multiple categories by their IDs
-exports.deleteCategories = async (req, res) => {
-  const {categoeyIds } = req.body; // Array of account IDs to delete
+  // Delete multiple categories by their IDs
+deleteCategories : async (req, res) => {
+  const { categoryIds } = req.body; // Array of account IDs to delete
   try {
     // Delete multiple accounts using the array of IDs
-    await Account.deleteMany({ _id: { $in: categoeyIds } });
-    res.status(200).json({ message: 'Categories deleted successfully' });
+    await Category.deleteMany({ _id: { $in: categoryIds } });
+    res.status(200).json({ message: "Categories deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+},
 };
+
+
 
 module.exports = categoryController;

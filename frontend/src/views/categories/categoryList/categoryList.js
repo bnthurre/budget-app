@@ -20,6 +20,7 @@ import {
 import Dialoga from '../../Dialog'
 import CIcon from '@coreui/icons-react'
 import { cilWindowMaximize } from '@coreui/icons'
+import DeleteMany from '../../DeleteMany'
 const Tables = () => {
   const [categories, setCategories] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
@@ -85,6 +86,23 @@ const Tables = () => {
     }
   }
 
+  const handleDeleteAll = async () => {
+    try {
+      // Send a POST request to delete multiple accounts
+      await axios.post('http://localhost:7001/delete-categories', { categoryIds: selectedRows })
+      // After successful deletion, update the accounts state by fetching fresh data
+      const response = await axios.get(
+        `http://localhost:7001/get-categories?page=${currentPage}&size=${PAGE_SIZE}`,
+      )
+      setCategories(response.data)
+      // Clear selected rows
+      setSelectedRows([])
+    } catch (error) {
+      console.error('Error deleting categories:', error)
+    }
+  }
+  
+
   const pageCount = Math.ceil(categories.length / PAGE_SIZE)
 
   const paginatedCategories = categories.slice(
@@ -133,6 +151,9 @@ const Tables = () => {
                     <div>{selectedRows.length} selected</div>
                   )}
                 </div>
+              )}
+              {selectedRows.length > 1 && (
+                <DeleteMany handleDeleteMany={handleDeleteAll} itemId={selectedRows} />
               )}
             </div>
           </CCardHeader>

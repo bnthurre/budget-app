@@ -77,6 +77,23 @@ const Tables = () => {
     }
   };
 
+
+
+  const handleDeleteAll = async () => {
+    try {
+      // Send a POST request to delete multiple accounts
+      await axios.post('http://localhost:7001/delete-many-users', { accountIds: selectedRows });
+      // After successful deletion, update the accounts state by fetching fresh data
+      const response = await axios.get(
+        `http://localhost:7001/get-all-users?page=${currentPage}&size=${PAGE_SIZE}`
+      );
+      setAccounts(response.data);
+      // Clear selected rows
+      setSelectedRows([]);
+    } catch (error) {
+      console.error('Error deleting users:', error);
+    }
+  };
   const pageCount = Math.ceil(users.length / PAGE_SIZE);
 
   const paginatedUsers = users.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);

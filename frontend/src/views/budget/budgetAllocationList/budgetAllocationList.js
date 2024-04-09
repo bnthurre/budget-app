@@ -20,6 +20,7 @@ import {
 import CIcon from '@coreui/icons-react';
 import { cilWindowMaximize } from '@coreui/icons';
 import Dialoga from '../../Dialog';
+import DeleteMany from '../../DeleteMany';
 
 const Tables = () => {
   const [allocations, setAllocations] = useState([]);
@@ -76,7 +77,21 @@ const Tables = () => {
       console.error('Error deleting allocations:', error);
     }
   };
-
+  const handleDeleteAll = async () => {
+    try {
+      // Send a POST request to delete multiple accounts
+      await axios.post('http://localhost:7001/delete-budget-allocations', { allocationIds: selectedRows });
+      // After successful deletion, update the accounts state by fetching fresh data
+      const response = await axios.post(
+        `http://localhost:7001/get-budget-allocation?page=${currentPage}&size=${PAGE_SIZE}`
+      );
+      setAllocations(response.data);
+      // Clear selected rows
+      setSelectedRows([]);
+    } catch (error) {
+      console.error('Error deleting allocations:', error);
+    }
+  };
 
   const pageCount = Math.ceil(allocations.length / PAGE_SIZE)
 
@@ -120,6 +135,8 @@ const Tables = () => {
                   )}
                 </div>
               )}
+              {selectedRows.length > 1 && <DeleteMany handleDeleteMany={handleDeleteAll} itemId={selectedRows} />}
+
             </div>
           </CCardHeader>
 

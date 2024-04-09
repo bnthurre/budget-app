@@ -10,8 +10,10 @@ const CategoryList = React.lazy(() => import('./views/categories/categoryList/ca
 //budget
 const budgetAllocationForm = React.lazy(() => import('./views/budget/budgetAllocationForm/budgetAllocationForm'))
 const budgetAllocationList = React.lazy(() => import('./views/budget/budgetAllocationList/budgetAllocationList'))
-const budgetPaymentForm = React.lazy(() => import('./views/budget/budgetPaymentForm/budgetPaymentForm'))
-const budgetPaymentList = React.lazy(() => import('./views/budget/budgetPaymentList/budgetPaymentList'))
+
+//payments
+const budgetPaymentForm = React.lazy(() => import('./views/payments/budgetPaymentForm/budgetPaymentForm'))
+const budgetPaymentList = React.lazy(() => import('./views/payments/budgetPaymentList/budgetPaymentList'))
 
 
 //users
@@ -33,8 +35,9 @@ const routes = [
   { path: '/budget', name: 'Budget', element: budgetAllocationList, exact: true },
   { path: '/budget/budgetAllocationForm', name: ' Create BudgetAllocation', element: budgetAllocationForm},
   { path: '/budget/budgetAllocationList', name: 'BudgtAllocation List', element: budgetAllocationList},
-  { path: '/budget/budgetPaymentForm', name: 'Create budgetPayment', element: budgetPaymentForm },
-  { path: '/budget/budgetPaymentList', name: 'BudgetPayment List', element: budgetPaymentList},
+  { path: '/payments', name: 'Payments', element: budgetPaymentList, exact: true },
+  { path: '/payments/budgetPaymentForm', name: 'Create budgetPayment', element: budgetPaymentForm },
+  { path: '/payments/budgetPaymentList', name: 'BudgetPayment List', element: budgetPaymentList},
   { path: '/users', name: 'Users', element: budgetAllocationList, exact: true },
   { path: '/users/userForm', name: ' Create User', element: UserForm},
   { path: '/users/usersList', name: 'users List', element: UsersList},

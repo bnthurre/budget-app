@@ -42,6 +42,44 @@ const Account = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const validationErrors = {};
+  //   if (!formData.account_name.trim()) {
+  //     validationErrors.account_name = 'Account Name is required';
+  //   }
+  //   if (!String(formData.account_number).trim()) {
+  //     validationErrors.account_number = 'Account Number is required';
+  //   }
+    
+  //   if (!formData.account_type.trim()) {
+  //     validationErrors.account_type = 'Account Type is required';
+  //   }
+  //   setErrors(validationErrors);
+
+  //   if (Object.keys(validationErrors).length === 0) {
+  //     try {
+  //       if (account) {
+  //         // If in edit mode
+  //         await axios.put(`http://localhost:7001/update-ccounts/${account._id}`, formData);
+  //       } else {
+  //         // If in create mode
+  //         await axios.post('http://localhost:7001/create-accounts', formData);
+  //       }
+  //       setFormData({
+  //         account_name: '',
+  //         account_number: '',
+  //         account_type: '',
+  //         description: '',
+  //       });
+  //       setError('');
+  //       navigate('/accounts/AccountLists');
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //       setError('An error occurred while saving the account.');
+  //     }
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = {};
@@ -56,7 +94,7 @@ const Account = () => {
       validationErrors.account_type = 'Account Type is required';
     }
     setErrors(validationErrors);
-
+  
     if (Object.keys(validationErrors).length === 0) {
       try {
         if (account) {
@@ -75,11 +113,18 @@ const Account = () => {
         setError('');
         navigate('/accounts/AccountLists');
       } catch (error) {
-        console.error('Error:', error);
-        setError('An error occurred while saving the account.');
+        console.error('Error creating category:', error);
+        if (error.response && error.response.status === 409) {
+          setError('Error creating account number. Please try again later.');
+        } else {
+          setError('Account Number already exists');
+        }
       }
     }
   };
+  
+  
+  
 
   return (
     <CContainer>

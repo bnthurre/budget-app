@@ -95,7 +95,7 @@ exports.deleteAllocations = async (req, res) => {
   const { allocationIds } = req.body; 
   try {
     // Delete multiple allocatrions using the array of IDs
-    await Account.deleteMany({ _id: { $in: allocationIds } });
+    await BudgetAllocation.deleteMany({ _id: { $in: allocationIds } });
     res.status(200).json({ message: 'Aloocations deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });

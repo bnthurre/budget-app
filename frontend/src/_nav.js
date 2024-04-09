@@ -61,7 +61,7 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Budget',
+    name: 'Budget Allocations',
   },
   {
     component: CNavItem,
@@ -75,17 +75,22 @@ const _nav = [
     to: '/budget/budgetAllocationList',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
+
+  {
+    component: CNavTitle,
+    name: 'Budget Payments',
+  },
   {
     component: CNavItem,
     name: 'Create Budget Payment',
-    to: '/budget/budgetPaymentForm',
+    to: '/payments/budgetPaymentForm',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
 
   },
   {
     component: CNavItem,
     name: 'Budget Payments',
-    to: '/budget/budgetPaymentList',
+    to: '/payments/budgetPaymentList',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
 
   },
