@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import {
   CButton,
   CCard,
@@ -76,6 +78,7 @@ const Tables = () => {
   const handleDelete = async (paymentId) => {
     try {
       await axios.delete(`http://localhost:7001/delete-budget-payment/${paymentId}`)
+      toast.success('Payment deleted successfully')
       setPayments(payments.filter((payment) => payment._id !== paymentId))
       setSelectedRows(selectedRows.filter((id) => id !== paymentId))
       setSelectAllChecked(false) // Uncheck "Select All" when deleting a payment
@@ -88,6 +91,7 @@ const Tables = () => {
     try {
       // Send a POST request to delete multiple accounts
       await axios.post('http://localhost:7001/delete-budget-payments', { paymentIds: selectedRows })
+      toast.success('All Payments deleted successfully')
       // After successful deletion, update the accounts state by fetching fresh data
       const response = await axios.post(
         `http://localhost:7001/get-budget-payment?page=${currentPage}&size=${PAGE_SIZE}`,
@@ -103,12 +107,15 @@ const Tables = () => {
   const pageCount = Math.ceil(payments.length / PAGE_SIZE)
 
   const paginatedPayments = payments.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const handleEdit = (paymentId) => {
+    history.push(`/payments/budgetPaymentForm?edit=${paymentId}`)
+  }
 
   return (
     <CRow>
       <CCol xs={12}>
         <div className="d-flex justify-content-end mb-3">
-          <Link to="/budget/budgetPaymentForm">
+          <Link to="/payments/budgetPaymentForm">
             <CButton color="primary" size="sm">
               Create Payment
             </CButton>
@@ -143,87 +150,95 @@ const Tables = () => {
           </CCardHeader>
 
           <CCardBody>
-            <CTable hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell>
-                    <input
-                      type="checkbox"
-                      checked={selectAllChecked && payments.length > 0}
-                      onChange={toggleSelectAll}
-                      disabled={payments.length === 0}
-                    />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell>Category</CTableHeaderCell>
-                  <CTableHeaderCell>Account Number</CTableHeaderCell>
-                  <CTableHeaderCell>Paid Amount</CTableHeaderCell>
-                  <CTableHeaderCell>Year</CTableHeaderCell>
-                  <CTableHeaderCell>Payment Date</CTableHeaderCell>
-                  <CTableHeaderCell>Description</CTableHeaderCell>
-                  <CTableHeaderCell></CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {payments.length === 0 ? (
+            <div className="table-responsive" style={{ overflowX: 'scroll' }}>
+              <CTable hover>
+                <CTableHead>
                   <CTableRow>
-                    <CTableDataCell
-                      colSpan="6"
-                      style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
-                    >
-                      <CIcon icon={cilWindowMaximize} size="xxl" />
-
-                      <div> No item found</div>
-                    </CTableDataCell>
+                    <CTableHeaderCell>
+                      <input
+                        type="checkbox"
+                        checked={selectAllChecked && payments.length > 0}
+                        onChange={toggleSelectAll}
+                        disabled={payments.length === 0}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell>Category</CTableHeaderCell>
+                    <CTableHeaderCell>Account Number</CTableHeaderCell>
+                    <CTableHeaderCell>Paid Amount</CTableHeaderCell>
+                    <CTableHeaderCell>Year</CTableHeaderCell>
+                    <CTableHeaderCell>Payment Date</CTableHeaderCell>
+                    <CTableHeaderCell>Description</CTableHeaderCell>
+                    <CTableHeaderCell></CTableHeaderCell>
                   </CTableRow>
-                ) : (
-                  paginatedPayments.map((payment) => (
-                    <CTableRow key={payment._id}>
-                      <CTableHeaderCell>
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.includes(payment._id)}
-                          onChange={() => toggleRowSelection(payment._id)}
-                        />
-                      </CTableHeaderCell>
-                      <CTableDataCell>{payment.categories.name}</CTableDataCell>
-                      <CTableDataCell>{payment.accounts.account_number}</CTableDataCell>
-                      <CTableDataCell>{payment.paid_amount}</CTableDataCell>
-                      <CTableDataCell>{payment.year}</CTableDataCell>
-                      <CTableDataCell>
-                        {new Date(payment.payment_date).toLocaleDateString()}
-                      </CTableDataCell>
-                      <CTableDataCell>{payment.description}</CTableDataCell>
-                      <CTableDataCell>
-                        <Dialoga itemId={payment._id} handleDelete={handleDelete} />
+                </CTableHead>
+                <CTableBody>
+                  {payments.length === 0 ? (
+                    <CTableRow>
+                      <CTableDataCell
+                        colSpan="6"
+                        style={{ textAlign: 'center', fontStyle: 'italic', color: 'gray' }}
+                      >
+                        <CIcon icon={cilWindowMaximize} size="xxl" />
+
+                        <div> No item found</div>
                       </CTableDataCell>
                     </CTableRow>
-                  ))
-                )}
-              </CTableBody>
-            </CTable>
-            <CPagination aria-label="Page navigation example">
-              <CPaginationItem
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Previous
-              </CPaginationItem>
-              {[...Array(pageCount).keys()].map((index) => (
+                  ) : (
+                    paginatedPayments.map((payment) => (
+                      <CTableRow key={payment._id}>
+                        <CTableHeaderCell>
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.includes(payment._id)}
+                            onChange={() => toggleRowSelection(payment._id)}
+                          />
+                        </CTableHeaderCell>
+                        <CTableDataCell>{payment.categories.name}</CTableDataCell>
+                        <CTableDataCell>{payment.accounts.account_number}</CTableDataCell>
+                        <CTableDataCell>{payment.paid_amount}</CTableDataCell>
+                        <CTableDataCell>${payment.year}</CTableDataCell>
+                        <CTableDataCell>
+                          {new Date(payment.payment_date).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>{payment.description}</CTableDataCell>
+                        <CTableDataCell>
+                          {/* <Dialoga itemId={payment._id} handleDelete={handleDelete} /> */}
+                          <Dialoga
+                            type="payment"
+                            itemId={payment._id}
+                            handleDelete={handleDelete}
+                            onEdit={handleEdit}
+                          />
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  )}
+                </CTableBody>
+              </CTable>
+              <CPagination aria-label="Page navigation example">
                 <CPaginationItem
-                  key={index}
-                  active={index + 1 === currentPage}
-                  onClick={() => setCurrentPage(index + 1)}
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
                 >
-                  {index + 1}
+                  Previous
                 </CPaginationItem>
-              ))}
-              <CPaginationItem
-                disabled={currentPage === pageCount}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next
-              </CPaginationItem>
-            </CPagination>
+                {[...Array(pageCount).keys()].map((index) => (
+                  <CPaginationItem
+                    key={index}
+                    active={index + 1 === currentPage}
+                    onClick={() => setCurrentPage(index + 1)}
+                  >
+                    {index + 1}
+                  </CPaginationItem>
+                ))}
+                <CPaginationItem
+                  disabled={currentPage === pageCount}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Next
+                </CPaginationItem>
+              </CPagination>
+            </div>
           </CCardBody>
         </CCard>
       </CCol>

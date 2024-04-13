@@ -79,13 +79,14 @@ exports.deleteUser = async (req, res) => {
 
 
 // Controller to delete multiple selected users by IDs
+
 exports.deleteSelectedUsers = async (req, res) => {
-    const { usersids } = req.body;
-    try {
-      const result = await User.deleteMany({ _id: { $in: usersids } });
-      res.status(200).json({ message: `${result.deletedCount} users deleted successfully` });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
+  const { usersids } = req.body; 
+  try {
+    // Delete multiple accounts using the array of IDs
+    await User.deleteMany({ _id: { $in: usersids } });
+    res.status(200).json({ message: 'Users deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

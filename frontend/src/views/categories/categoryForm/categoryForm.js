@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   CButton,
   CCard,
@@ -47,9 +49,13 @@ const Category = () => {
       if (category) {
         // If in edit mode
         await axios.put(`http://localhost:7001/update-category/${category._id}`, formData);
+        toast.success('Category updated successfully');
+
       } else {
         // If in create mode
         await axios.post('http://localhost:7001/create-category', formData);
+        toast.success('Category created successfully');
+
       }
       // Reset form fields after successful submission
       setFormData({

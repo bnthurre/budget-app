@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   CButton,
   CCard,
@@ -78,6 +80,7 @@ const Tables = () => {
   const handleDelete = async (categoryId) => {
     try {
       await axios.delete(`http://localhost:7001/delete-category/${categoryId}`)
+      toast.success('Category deleted successfully');
       setCategories(categories.filter((category) => category._id !== categoryId))
       setSelectedRows(selectedRows.filter((id) => id !== categoryId))
       setSelectAllChecked(selectedRows.length === 1) // If only one row was selected, uncheck "Select All"
@@ -90,6 +93,7 @@ const Tables = () => {
     try {
       // Send a POST request to delete multiple accounts
       await axios.post('http://localhost:7001/delete-categories', { categoryIds: selectedRows })
+      toast.success('All categories deleted successfully');
       // After successful deletion, update the accounts state by fetching fresh data
       const response = await axios.get(
         `http://localhost:7001/get-categories?page=${currentPage}&size=${PAGE_SIZE}`,

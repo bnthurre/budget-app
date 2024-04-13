@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   CButton,
   CCard,
@@ -96,9 +98,13 @@ const BudgetAllocation = () => {
         if (allocation) {
           // If in edit mode
           await axios.put(`http://localhost:7001/update-budget-allocation/${allocation._id}`, formData);
+          toast.success('Budget Allocation updated successfully');
+
         } else {
           // If in create mode
           await axios.post('http://localhost:7001/create-budget-allocation', formData);
+          toast.success('Budget Allocation created successfully');
+
         }
         setFormData({
           category: '',
@@ -126,7 +132,7 @@ const BudgetAllocation = () => {
           <CCard className="mx-4">
             <CCardBody className="p-4">
               <CForm onSubmit={handleSubmit}>
-                <h1>{allocation ? 'Edit Account' : 'Create Account'}</h1>
+                <h1>{allocation ? 'Edit Allocation' : 'Create Allocation'}</h1>
                 <p className="text-body-secondary">Fill in the details</p>
                 {error.general && <div className="text-danger mb-3">{error.general}</div>}
                 {error.category && <div className="text-danger mb-3">{error.category}</div>}

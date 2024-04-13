@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   CButton,
   CCard,
@@ -85,9 +87,13 @@ const User = () => {
         if (user) {
           // If in edit mode
           await axios.put(`http://localhost:7001/update-user/${user._id}`, formData)
+          toast.success('Users updated successfully');
+
         } else {
           // If in create mode
           await axios.post('http://localhost:7001/create-user', formData)
+          toast.success('Users created successfully');
+
         }
         setFormData({
           fullName: '',

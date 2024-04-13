@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css' // Import DatePicker styles
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import {
   CButton,
   CCard,
@@ -17,6 +19,8 @@ import {
 } from '@coreui/react'
 
 const BudgetPayment = () => {
+  const location = useLocation()
+  const { Payment } = location.state || {}
   const [formData, setFormData] = useState({
     category: '',
     account_id: '',
@@ -31,6 +35,18 @@ const BudgetPayment = () => {
   const [accounts, setAccounts] = useState([])
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (Payment) {
+      setFormData({
+        category: Payment.category || '',
+        account_id: Payment.account_id ||'',
+        paid_amount: Payment.paid_amount ||'',
+        year: Payment.year ||'',
+        payment_date: Payment.payment_date ||'',
+        description:  Payment.description ||'',
+      })
+    }
+  }, [Payment])
   useEffect(() => {
     const fetchCategoriesAndAccounts = async () => {
       try {
@@ -75,27 +91,34 @@ const BudgetPayment = () => {
 
     setError(validationErrors)
 
-    if (Object.keys(validationErrors).length > 0) {
-      return
-    }
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        if (Payment) {
+          // If in edit mode
+          await axios.put(`http://localhost:7001/update-budget-payment/${Payment._id}`, formData);
+          toast.success('Budget payment updated successfully');
 
-    try {
-      const response = await axios.post('http://localhost:7001/create-budget-payment', formData)
-      console.log('Budget payment created:', response.data)
-      // Reset form fields after successful submission
-      setFormData({
-        category: '',
-        account_id: '',
-        paid_amount: '',
-        year: '',
-        payment_date: '',
-        description: '',
-      })
-      setError({})
-      navigate('/budget/BudgetPaymentList')
-    } catch (error) {
-      console.error('Error creating Budget payment:', error)
-      setError('Error creating Budget payment')
+        } else {
+          // If in create mode
+          const response = await axios.post('http://localhost:7001/create-budget-payment', formData)
+          console.log('Budget payment created:', response.data)
+          toast.success('Budget payment created successfully');
+
+        }
+        setFormData({
+          category: '',
+          account_id: '',
+          paid_amount: '',
+          year: '',
+          payment_date: '',
+          description: '',
+        })
+        setError({})
+        navigate('/budget/BudgetPaymentList')
+      } catch (error) {
+        console.error('Error creating Budget payment:', error)
+        setError('Error creating Budget payment')
+      }
     }
   }
   // Generate an array of years starting from the current year and going back 10 years
@@ -108,8 +131,8 @@ const BudgetPayment = () => {
           <CCard className="mx-4">
             <CCardBody className="p-4">
               <CForm onSubmit={handleSubmit}>
-                <h1>Create Budget Payment</h1>
-                <p className="text-body-secondary">Create your Budget Payment</p>
+              <h1>{Payment ? 'Edit Payment' : 'Create Payment'}</h1>
+                <p className="text-body-secondary">Fill in the details</p>
                 {error.category && <div className="text-danger mb-3">{error.category}</div>}
 
                 <CInputGroup className="mb-3">
@@ -192,8 +215,8 @@ const BudgetPayment = () => {
                   />
                 </CInputGroup>
                 <div className="d-grid">
-                  <CButton type="submit" color="primary">
-                    Create BudgetPayment
+                <CButton type="submit" color="primary">
+                    {Payment ? 'Save Payment' : 'Create Payment'}
                   </CButton>
                 </div>
               </CForm>
@@ -206,4 +229,3 @@ const BudgetPayment = () => {
 }
 
 export default BudgetPayment
-
