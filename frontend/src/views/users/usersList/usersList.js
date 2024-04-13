@@ -133,7 +133,7 @@ const Tables = () => {
               {selectedRows.length > 0 && (
                 <div className="mb-2">
                   {selectedRows.length === users.length ? (
-                    <div>All users are selected</div>
+                    <div>{users.length} selected</div>
                   ) : (
                     <div>{selectedRows.length} selected</div>
                   )}

@@ -137,7 +137,7 @@ const Tables = () => {
               {selectedRows.length > 0 && (
                 <div className="mb-2">
                   {selectedRows.length === payments.length ? (
-                    <div>All Payments are selected</div>
+                    <div>{payments.length} are selected</div>
                   ) : (
                     <div>{selectedRows.length} selected</div>
                   )}
